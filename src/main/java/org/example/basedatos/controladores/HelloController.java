@@ -37,9 +37,11 @@ public class HelloController {
 
     public void initialize() throws SQLException {
 
-        tcNombre.setCellValueFactory(new PropertyValueFactory<>("code"));
-
-
+        tcID.setCellValueFactory(new PropertyValueFactory<>("id"));
+        tcNombre.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tcCodigo.setCellValueFactory(new PropertyValueFactory<>("code"));
+        tcFechaCreacion.setCellValueFactory(new PropertyValueFactory<>("create_date"));
+        tcFechaEscritura.setCellValueFactory(new PropertyValueFactory<>("write_date"));
 
     }
 

@@ -7,7 +7,6 @@ public class payment {
     private String name;
     private String code;
     private Timestamp create_date;
-    private Timestamp write_date;
 
     public Integer getId() {
         return id;
@@ -17,20 +16,20 @@ public class payment {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getCode() {
         return code;
     }
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Timestamp getCreate_date() {
@@ -48,4 +47,8 @@ public class payment {
     public void setWrite_date(Timestamp write_date) {
         this.write_date = write_date;
     }
+
+    private Timestamp write_date;
+
+
 }

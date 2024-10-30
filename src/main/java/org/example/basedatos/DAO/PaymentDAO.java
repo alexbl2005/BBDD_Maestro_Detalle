@@ -2,10 +2,7 @@ package org.example.basedatos.DAO;
 
 import org.example.basedatos.modelos.payment;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +16,11 @@ public class PaymentDAO {
 
             while (resultSet.next()) {
                 payment MetodoPago = new payment();
+                MetodoPago.setId(Integer.valueOf(resultSet.getString("id")));
+                MetodoPago.setName(resultSet.getString("name"));
                 MetodoPago.setCode(resultSet.getString("code"));
+                MetodoPago.setCreate_date(Timestamp.valueOf(resultSet.getString("create_date")));
+                MetodoPago.setWrite_date(Timestamp.valueOf(resultSet.getString("write_date")));
                 MetodosPagos.add(MetodoPago);
                 System.out.println(resultSet.getString("code"));
             }
