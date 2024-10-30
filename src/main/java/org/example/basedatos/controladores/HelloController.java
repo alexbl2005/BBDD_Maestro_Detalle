@@ -25,12 +25,19 @@ public class HelloController {
     @FXML
     private TableView tbDatos;
     @FXML
-    private TableColumn TCnombre;
+    private TableColumn tcNombre;
+    @FXML
+    private TableColumn tcCodigo;
+    @FXML
+    private TableColumn tcFechaCreacion;
+    @FXML
+    private TableColumn tcID;
+    @FXML
+    private TableColumn tcFechaEscritura;
 
     public void initialize() throws SQLException {
 
-        
-        TCnombre.setCellValueFactory(new PropertyValueFactory<>("code"));
+        tcNombre.setCellValueFactory(new PropertyValueFactory<>("code"));
 
 
 

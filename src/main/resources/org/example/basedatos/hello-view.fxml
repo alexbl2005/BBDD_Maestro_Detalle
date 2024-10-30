@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.basedatos.controladores.HelloController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.basedatos.controladores.HelloController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
   </columnConstraints>
@@ -20,7 +14,11 @@
    <children>
       <TableView fx:id="tbDatos" prefHeight="235.0" prefWidth="600.0" GridPane.rowIndex="1">
          <columns>
-            <TableColumn fx:id="TCnombre" prefWidth="75.0" text="Column X" />
+            <TableColumn fx:id="tcID" prefWidth="75.0" text="ID" />
+            <TableColumn fx:id="tcNombre" prefWidth="75.0" text="Nombre" />
+            <TableColumn fx:id="tcCodigo" prefWidth="75.0" text="Codigo" />
+            <TableColumn fx:id="tcFechaCreacion" prefWidth="107.0" text="Fecha Creacion" />
+            <TableColumn fx:id="tcFechaEscritura" prefWidth="117.0" text="Fecha Escritura" />
          </columns>
       </TableView>
       <GridPane>
