@@ -21,6 +21,8 @@ public class PaymentDAO {
                 MetodoPago.setCode(resultSet.getString("code"));
                 MetodoPago.setCreate_date(Timestamp.valueOf(resultSet.getString("create_date")));
                 MetodoPago.setWrite_date(Timestamp.valueOf(resultSet.getString("write_date")));
+
+                System.out.println(resultSet.getString("code"));
                 MetodosPagos.add(MetodoPago);
                 System.out.println(resultSet.getString("code"));
             }

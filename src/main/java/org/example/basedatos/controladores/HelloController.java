@@ -16,8 +16,6 @@ import org.example.basedatos.DAO.ConexionDB;
 import org.example.basedatos.DAO.PaymentDAO;
 import org.example.basedatos.HelloApplication;
 import org.example.basedatos.modelos.payment;
-
-
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
