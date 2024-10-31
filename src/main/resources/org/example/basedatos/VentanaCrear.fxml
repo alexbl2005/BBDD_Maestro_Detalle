@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="183.0" prefWidth="335.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.basedatos.controladores.CrearController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="69.0" minHeight="10.0" prefHeight="57.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="79.0" minHeight="0.0" prefHeight="53.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="122.0" minHeight="10.0" prefHeight="71.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <HBox prefHeight="88.0" prefWidth="335.0">
+         <children>
+            <Label prefHeight="25.0" prefWidth="70.0" text="Nombre" textAlignment="CENTER">
+               <HBox.margin>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </HBox.margin>
+            </Label>
+            <TextField prefHeight="25.0" prefWidth="230.0">
+               <HBox.margin>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </HBox.margin>
+            </TextField>
+         </children>
+      </HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
+         <children>
+            <Label prefHeight="25.0" prefWidth="70.0" text="Codigo" textAlignment="CENTER">
+               <HBox.margin>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </HBox.margin>
+            </Label>
+            <TextField prefHeight="25.0" prefWidth="230.0">
+               <HBox.margin>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </HBox.margin>
+            </TextField>
+         </children>
+      </HBox>
+      <HBox prefHeight="84.0" prefWidth="262.0" GridPane.rowIndex="2">
+         <children>
+            <Button fx:id="btnCrearCancelar" alignment="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="80.0" text="Cancelar">
+               <HBox.margin>
+                  <Insets bottom="15.0" left="70.0" right="15.0" top="15.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="btnCrearAceptar" alignment="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="80.0" text="Aceptar">
+               <HBox.margin>
+                  <Insets bottom="15.0" left="30.0" right="15.0" top="15.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</GridPane>

@@ -7,12 +7,18 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import org.example.basedatos.DAO.ConexionDB;
 import org.example.basedatos.DAO.PaymentDAO;
+import org.example.basedatos.HelloApplication;
 import org.example.basedatos.modelos.payment;
 
+
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +44,10 @@ public class HelloController {
     private ChoiceBox cbBusqueda;
     @FXML
     private TextField tfBusqueda;
+    @FXML
+    private Button btnEliminar;
+    @FXML
+    private Button btnCrear;
 
     public void initialize() throws SQLException {
 
@@ -160,8 +170,25 @@ public class HelloController {
             ObservableList<payment> datos = FXCollections.observableArrayList(MetodosPagos);
             tbDatos.setItems(datos);
         }
+    }
 
+    @FXML
+    public void Eliminar(ActionEvent actionEvent) {
+        System.out.println("eliminar");
+    }
+
+    @FXML
+    public void Crear(ActionEvent actionEvent) throws IOException {
+        System.out.println("crear");
+
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaCrear.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 350, 200);
+        Stage stage = new Stage();
+        stage.setTitle("Crear");
+            stage.setScene(scene);
+            stage.show();
+        }
 
     }
-}
+
 
