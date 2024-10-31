@@ -30,10 +30,6 @@ public class CrearController {
         String Nombre = tfNombre.getText();
         String Codigo = tfCodigo.getText();
 
-        LocalDateTime ahora = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
-        String horaFormateada = ahora.format(formatter);
-
         Connection conexion = ConexionDB.getConnection();
         PreparedStatement IDBuscar = conexion.prepareStatement("INSERT INTO payment_method (name, code,  create_date, write_date) VALUES (?,?,NOW(),NOW())");
         IDBuscar.setString(1, Nombre);
