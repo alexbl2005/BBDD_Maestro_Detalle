@@ -195,8 +195,9 @@ public class HelloController {
 
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaCrear.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 350, 200);
-        Stage stage = new Stage();
-        stage.setTitle("Crear");
+            scene.getStylesheets().add(HelloApplication.class.getResource("Estiloo.css").toExternalForm());
+            Stage stage = new Stage();
+            stage.setTitle("Crear");
             stage.setScene(scene);
             stage.show();
         }
@@ -208,6 +209,7 @@ public class HelloController {
 
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaModificar.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 350, 200);
+        scene.getStylesheets().add(HelloApplication.class.getResource("Estiloo.css").toExternalForm());
         Stage stage = new Stage();
         stage.setTitle("Modificar");
         stage.setScene(scene);
@@ -226,6 +228,7 @@ public class HelloController {
 
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaModificar.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 350, 200);
+            scene.getStylesheets().add(HelloApplication.class.getResource("Estiloo.css").toExternalForm());
             Stage stage = new Stage();
             stage.setTitle("Modificar");
             stage.setScene(scene);

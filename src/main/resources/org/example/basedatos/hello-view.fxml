@@ -6,56 +6,89 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.basedatos.controladores.HelloController">
+<VBox prefHeight="800.0" prefWidth="800.0" styleClass="azul_claro" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.basedatos.controladores.HelloController">
          <children>
       <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="32.0" prefWidth="542.0">
          <children>
             <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="609.0" HBox.hgrow="ALWAYS">
                <children>
-                  <ChoiceBox fx:id="cbBusqueda" prefHeight="25.0" prefWidth="111.0">
+                  <ChoiceBox fx:id="cbBusqueda" prefHeight="33.0" prefWidth="111.0" styleClass="negro">
                      <HBox.margin>
-                        <Insets bottom="5.0" left="5.0" top="5.0" />
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
                   </ChoiceBox>
-                        <TextField fx:id="tfBusqueda" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="158.0" HBox.hgrow="ALWAYS">
+                        <TextField fx:id="tfBusqueda" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="33.0" prefWidth="293.0" styleClass="negro" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets bottom="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </TextField>
-                        <Button fx:id="BtnBuscar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#Buscar" prefHeight="25.0" prefWidth="62.0" text="Buscar">
+                        <Button fx:id="BtnBuscar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#Buscar" prefHeight="33.0" prefWidth="80.0" styleClass="negro" text="Buscar">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0">
+                           <image>
+                              <Image url="@Imagenes/buscar.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
-                  <Button fx:id="btnCrear" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#Crear" text="Crear">
+                  <Button fx:id="btnCrear" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#Crear" styleClass="negro" text="Crear">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0">
+                           <image>
+                              <Image url="@Imagenes/crear.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
-                  <Button fx:id="btnModificar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#Modificar" text="Modificar">
+                  <Button fx:id="btnModificar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#Modificar" styleClass="negro" text="Modificar">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0">
+                           <image>
+                              <Image url="@Imagenes/modificar.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
-                  <Button fx:id="btnEliminar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#Eliminar" text="Eliminar">
+                  <Button fx:id="btnEliminar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#Eliminar" styleClass="negro" text="Eliminar">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0">
+                           <image>
+                              <Image url="@Imagenes/borrar.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
                </children>
             </HBox>
          </children>
       </HBox>
-            <TableView fx:id="tbDatos" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#DatosClick" prefHeight="342.0" prefWidth="706.0" VBox.vgrow="ALWAYS">
+            <TableView fx:id="tbDatos" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#DatosClick" prefHeight="342.0" prefWidth="706.0" styleClass="negro" VBox.vgrow="ALWAYS">
                <columns>
-                  <TableColumn fx:id="tcID" prefWidth="42.0" text="ID" />
-                  <TableColumn fx:id="tcNombre" prefWidth="110.0" text="Nombre" />
-                  <TableColumn fx:id="tcCodigo" prefWidth="116.0" text="Codigo" />
-                  <TableColumn fx:id="tcFechaCreacion" prefWidth="158.0" text="Fecha Creacion" />
-                  <TableColumn fx:id="tcFechaEscritura" prefWidth="162.0" text="Fecha Escritura" />
+                  <TableColumn fx:id="tcID" prefWidth="42.0" styleClass="negro" text="ID" />
+                  <TableColumn fx:id="tcNombre" prefWidth="110.0" styleClass="negro" text="Nombre" />
+                  <TableColumn fx:id="tcCodigo" prefWidth="116.0" styleClass="negro" text="Codigo" />
+                  <TableColumn fx:id="tcFechaCreacion" prefWidth="158.0" styleClass="negro" text="Fecha Creacion" />
+                  <TableColumn fx:id="tcFechaEscritura" prefWidth="162.0" styleClass="negro" text="Fecha Escritura" />
                </columns>
             </TableView>
          </children>
