@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.basedatos.controladores.HelloController">
+<VBox prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.basedatos.controladores.HelloController">
          <children>
       <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="32.0" prefWidth="542.0">
          <children>
@@ -35,6 +35,11 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Button>
+                  <Button fx:id="btnModificar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#Modificar" text="Modificar">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
                   <Button fx:id="btnEliminar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#Eliminar" text="Eliminar">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -44,7 +49,7 @@
             </HBox>
          </children>
       </HBox>
-            <TableView fx:id="tbDatos" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="342.0" prefWidth="706.0" VBox.vgrow="ALWAYS">
+            <TableView fx:id="tbDatos" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#DatosClick" prefHeight="342.0" prefWidth="706.0" VBox.vgrow="ALWAYS">
                <columns>
                   <TableColumn fx:id="tcID" prefWidth="42.0" text="ID" />
                   <TableColumn fx:id="tcNombre" prefWidth="110.0" text="Nombre" />

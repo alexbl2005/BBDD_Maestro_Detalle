@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.example.basedatos.DAO.ConexionDB;
 import org.example.basedatos.DAO.PaymentDAO;
@@ -46,6 +47,8 @@ public class HelloController {
     private Button btnEliminar;
     @FXML
     private Button btnCrear;
+    @FXML
+    private Button btnModificar;
 
     public void initialize() throws SQLException {
 
@@ -171,13 +174,24 @@ public class HelloController {
     }
 
     @FXML
-    public void Eliminar(ActionEvent actionEvent) {
-        System.out.println("eliminar");
+    public void Eliminar(ActionEvent actionEvent) throws SQLException {
+        payment tupla = (payment) tbDatos.getSelectionModel().getSelectedItem();
+
+        int ID = tupla.getId();
+
+        Connection conexion = ConexionDB.getConnection();
+        PreparedStatement IDEliminar = conexion.prepareStatement("DELETE FROM payment_method WHERE id = ?;");
+        IDEliminar.setInt(1, ID);
+        IDEliminar.executeUpdate();
+
+        Alert Eliminado = new Alert(Alert.AlertType.INFORMATION);
+        Eliminado.setTitle("Registro eliminido");
+        Eliminado.setContentText("Se ha eliminado el registro");
+        Eliminado.showAndWait();
     }
 
     @FXML
     public void Crear(ActionEvent actionEvent) throws IOException {
-        System.out.println("crear");
 
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaCrear.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 350, 200);
@@ -187,6 +201,43 @@ public class HelloController {
             stage.show();
         }
 
+    @FXML
+    public void Modificar(ActionEvent actionEvent) throws IOException {
+
+        payment tupla = (payment) tbDatos.getSelectionModel().getSelectedItem();
+
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaModificar.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 350, 200);
+        Stage stage = new Stage();
+        stage.setTitle("Modificar");
+        stage.setScene(scene);
+
+        ModificarController controller = fxmlLoader.getController();
+        controller.RecibirDatos(tupla.getId(), tupla.getName(), tupla.getCode());
+
+        stage.show();
     }
+
+    @FXML
+    public void DatosClick(MouseEvent event) throws IOException {
+        if(event.getClickCount()==2)
+        {
+            payment tupla = (payment) tbDatos.getSelectionModel().getSelectedItem();
+
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaModificar.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 350, 200);
+            Stage stage = new Stage();
+            stage.setTitle("Modificar");
+            stage.setScene(scene);
+
+            ModificarController controller = fxmlLoader.getController();
+            controller.RecibirDatos(tupla.getId(), tupla.getName(), tupla.getCode());
+
+            stage.show();
+        }
+    }
+
+
+}
 
 
