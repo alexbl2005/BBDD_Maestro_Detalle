@@ -1,35 +1,51 @@
 package org.example.basedatos.modelos;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.StringProperty;
+
 import java.sql.Timestamp;
 
 public class payment {
-    private Integer id;
-    private String name;
-    private String code;
+    private IntegerProperty id;
+    private StringProperty name;
+    private StringProperty code;
     private Timestamp create_date;
+    private Timestamp write_date;
 
-    public Integer getId() {
+    public int getId() {
+        return id.get();
+    }
+
+    public IntegerProperty idProperty() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
+    public void setId(int id) {
+        this.id.set(id);
     }
 
     public String getName() {
+        return name.get();
+    }
+
+    public StringProperty nameProperty() {
         return name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name.set(name);
+    }
+
+    public String getCode() {
+        return code.get();
+    }
+
+    public StringProperty codeProperty() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code.set(code);
     }
 
     public Timestamp getCreate_date() {
@@ -47,8 +63,4 @@ public class payment {
     public void setWrite_date(Timestamp write_date) {
         this.write_date = write_date;
     }
-
-    private Timestamp write_date;
-
-
 }
