@@ -1,13 +1,18 @@
 package org.example.basedatos.controladores;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.example.basedatos.DAO.ConexionDB;
+import org.example.basedatos.HelloApplication;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,6 +29,21 @@ public class ModificarController {
     private TextField tfCodigo;
     @FXML
     private TextField tfID;
+
+    public void initialize(){
+        StringProperty NombreProperty = new SimpleStringProperty();
+        StringProperty CodigoProperty = new SimpleStringProperty();
+        tfNombre.textProperty().bindBidirectional(NombreProperty);
+        tfCodigo.textProperty().bindBidirectional(CodigoProperty);
+
+        btnCrearAceptar.disableProperty().bind(
+                Bindings.createBooleanBinding(
+                        () -> NombreProperty.get() == null || NombreProperty.get().trim().isEmpty() ||
+                                CodigoProperty.get() == null || CodigoProperty.get().trim().isEmpty(),
+                        NombreProperty, CodigoProperty
+                )
+        );
+    }
 
     @FXML
     public void Aceptar(ActionEvent actionEvent) throws SQLException {
@@ -48,6 +68,7 @@ public class ModificarController {
         stage.close();
 
         Creado.showAndWait();
+
     }
 
     public void RecibirDatos(int id, String name, String code){
