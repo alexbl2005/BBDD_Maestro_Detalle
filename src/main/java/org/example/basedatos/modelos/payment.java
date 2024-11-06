@@ -6,46 +6,34 @@ import javafx.beans.property.StringProperty;
 import java.sql.Timestamp;
 
 public class payment {
-    private IntegerProperty id;
-    private StringProperty name;
-    private StringProperty code;
+    private int id;
+    private String name;
+    private String code;
     private Timestamp create_date;
     private Timestamp write_date;
 
     public int getId() {
-        return id.get();
-    }
-
-    public IntegerProperty idProperty() {
         return id;
     }
 
     public void setId(int id) {
-        this.id.set(id);
+        this.id = id;
     }
 
     public String getName() {
-        return name.get();
-    }
-
-    public StringProperty nameProperty() {
         return name;
     }
 
     public void setName(String name) {
-        this.name.set(name);
+        this.name = name;
     }
 
     public String getCode() {
-        return code.get();
-    }
-
-    public StringProperty codeProperty() {
         return code;
     }
 
     public void setCode(String code) {
-        this.code.set(code);
+        this.code = code;
     }
 
     public Timestamp getCreate_date() {
