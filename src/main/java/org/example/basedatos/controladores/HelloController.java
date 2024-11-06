@@ -53,7 +53,7 @@ public class HelloController {
     public void initialize() throws SQLException {
 
         cbBusqueda.getItems().addAll( "", "ID", "Nombre", "Codigo");
-        cbBusqueda.setOnAction(this::busqueda);
+        cbBusqueda.setOnAction(this::busquedacb);
         cbBusqueda.setValue("");
 
         tcID.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -62,9 +62,11 @@ public class HelloController {
         tcFechaCreacion.setCellValueFactory(new PropertyValueFactory<>("create_date"));
         tcFechaEscritura.setCellValueFactory(new PropertyValueFactory<>("write_date"));
 
+        btnEliminar.disableProperty().bind(tbDatos.getSelectionModel().selectedItemProperty().isNull());
+        btnModificar.disableProperty().bind(tbDatos.getSelectionModel().selectedItemProperty().isNull());
     }
 
-    private void busqueda(Event event) {
+    private void busquedacb(Event event) {
         String busquedacb = (String) cbBusqueda.getValue();
         System.out.println(busquedacb);
 
@@ -73,6 +75,87 @@ public class HelloController {
     @FXML
     public void Buscar(ActionEvent actionEvent) throws SQLException {
 
+        busqueda();
+
+    }
+
+    @FXML
+    public void Eliminar(ActionEvent actionEvent) throws SQLException {
+        payment tupla = (payment) tbDatos.getSelectionModel().getSelectedItem();
+
+        int ID = tupla.getId();
+
+        Connection conexion = ConexionDB.getConnection();
+        PreparedStatement IDEliminar = conexion.prepareStatement("DELETE FROM payment_method WHERE id = ?;");
+        IDEliminar.setInt(1, ID);
+        IDEliminar.executeUpdate();
+
+        Alert Eliminado = new Alert(Alert.AlertType.INFORMATION);
+        Eliminado.setTitle("Registro eliminido");
+        Eliminado.setContentText("Se ha eliminado el registro");
+        Eliminado.showAndWait();
+
+        busqueda();
+    }
+
+    @FXML
+    public void Crear(ActionEvent actionEvent) throws IOException, SQLException {
+
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaCrear.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 350, 200);
+            scene.getStylesheets().add(HelloApplication.class.getResource("Estiloo.css").toExternalForm());
+            Stage stage = new Stage();
+            stage.setTitle("Crear");
+            stage.setScene(scene);
+            stage.showAndWait();
+
+            busqueda();
+        }
+
+    @FXML
+    public void Modificar(ActionEvent actionEvent) throws IOException, SQLException {
+
+        payment tupla = (payment) tbDatos.getSelectionModel().getSelectedItem();
+
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaModificar.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 350, 200);
+        scene.getStylesheets().add(HelloApplication.class.getResource("Estiloo.css").toExternalForm());
+        Stage stage = new Stage();
+        stage.setTitle("Modificar");
+        stage.setScene(scene);
+
+        ModificarController controller = fxmlLoader.getController();
+        controller.RecibirDatos(tupla.getId(), tupla.getName(), tupla.getCode());
+
+        stage.showAndWait();
+
+        busqueda();
+
+    }
+
+    @FXML
+    public void DatosClick(MouseEvent event) throws IOException, SQLException {
+        if(event.getClickCount()==2)
+        {
+            payment tupla = (payment) tbDatos.getSelectionModel().getSelectedItem();
+
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaModificar.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 350, 200);
+            scene.getStylesheets().add(HelloApplication.class.getResource("Estiloo.css").toExternalForm());
+            Stage stage = new Stage();
+            stage.setTitle("Modificar");
+            stage.setScene(scene);
+
+            ModificarController controller = fxmlLoader.getController();
+            controller.RecibirDatos(tupla.getId(), tupla.getName(), tupla.getCode());
+
+            stage.showAndWait();
+
+            busqueda();
+        }
+    }
+
+    public void busqueda() throws SQLException {
         if (cbBusqueda.getValue().equals(""))
         {
             Task<Void> tarea = new Task<Void>() {
@@ -111,19 +194,19 @@ public class HelloController {
             IDBuscar.setInt(1, Integer.valueOf(tfBusqueda.getText()));
             ResultSet resultado = IDBuscar.executeQuery();
 
-                while (resultado.next()) {
-                    payment MetodoPago = new payment();
-                    MetodoPago.setId(Integer.valueOf(resultado.getString("id")));
-                    MetodoPago.setName(resultado.getString("name"));
-                    MetodoPago.setCode(resultado.getString("code"));
-                    MetodoPago.setCreate_date(Timestamp.valueOf(resultado.getString("create_date")));
-                    MetodoPago.setWrite_date(Timestamp.valueOf(resultado.getString("write_date")));
-                    MetodosPagos.add(MetodoPago);
-                    System.out.println(resultado.getString("code"));
+            while (resultado.next()) {
+                payment MetodoPago = new payment();
+                MetodoPago.setId(Integer.valueOf(resultado.getString("id")));
+                MetodoPago.setName(resultado.getString("name"));
+                MetodoPago.setCode(resultado.getString("code"));
+                MetodoPago.setCreate_date(Timestamp.valueOf(resultado.getString("create_date")));
+                MetodoPago.setWrite_date(Timestamp.valueOf(resultado.getString("write_date")));
+                MetodosPagos.add(MetodoPago);
+                System.out.println(resultado.getString("code"));
 
-                }
+            }
             ObservableList<payment> datos = FXCollections.observableArrayList(MetodosPagos);
-                tbDatos.setItems(datos);
+            tbDatos.setItems(datos);
 
         }else if (cbBusqueda.getValue().equals("Nombre")) {
 
@@ -172,74 +255,6 @@ public class HelloController {
             tbDatos.setItems(datos);
         }
     }
-
-    @FXML
-    public void Eliminar(ActionEvent actionEvent) throws SQLException {
-        payment tupla = (payment) tbDatos.getSelectionModel().getSelectedItem();
-
-        int ID = tupla.getId();
-
-        Connection conexion = ConexionDB.getConnection();
-        PreparedStatement IDEliminar = conexion.prepareStatement("DELETE FROM payment_method WHERE id = ?;");
-        IDEliminar.setInt(1, ID);
-        IDEliminar.executeUpdate();
-
-        Alert Eliminado = new Alert(Alert.AlertType.INFORMATION);
-        Eliminado.setTitle("Registro eliminido");
-        Eliminado.setContentText("Se ha eliminado el registro");
-        Eliminado.showAndWait();
-    }
-
-    @FXML
-    public void Crear(ActionEvent actionEvent) throws IOException {
-
-            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaCrear.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 350, 200);
-            scene.getStylesheets().add(HelloApplication.class.getResource("Estiloo.css").toExternalForm());
-            Stage stage = new Stage();
-            stage.setTitle("Crear");
-            stage.setScene(scene);
-            stage.show();
-        }
-
-    @FXML
-    public void Modificar(ActionEvent actionEvent) throws IOException {
-
-        payment tupla = (payment) tbDatos.getSelectionModel().getSelectedItem();
-
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaModificar.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 350, 200);
-        scene.getStylesheets().add(HelloApplication.class.getResource("Estiloo.css").toExternalForm());
-        Stage stage = new Stage();
-        stage.setTitle("Modificar");
-        stage.setScene(scene);
-
-        ModificarController controller = fxmlLoader.getController();
-        controller.RecibirDatos(tupla.getId(), tupla.getName(), tupla.getCode());
-
-        stage.show();
-    }
-
-    @FXML
-    public void DatosClick(MouseEvent event) throws IOException {
-        if(event.getClickCount()==2)
-        {
-            payment tupla = (payment) tbDatos.getSelectionModel().getSelectedItem();
-
-            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaModificar.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 350, 200);
-            scene.getStylesheets().add(HelloApplication.class.getResource("Estiloo.css").toExternalForm());
-            Stage stage = new Stage();
-            stage.setTitle("Modificar");
-            stage.setScene(scene);
-
-            ModificarController controller = fxmlLoader.getController();
-            controller.RecibirDatos(tupla.getId(), tupla.getName(), tupla.getCode());
-
-            stage.show();
-        }
-    }
-
 
 }
 

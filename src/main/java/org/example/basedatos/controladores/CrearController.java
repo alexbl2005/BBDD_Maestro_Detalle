@@ -1,5 +1,8 @@
 package org.example.basedatos.controladores;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -23,6 +26,22 @@ public class CrearController {
     private TextField tfNombre;
     @FXML
     private TextField tfCodigo;
+
+
+    public void initialize(){
+        StringProperty NombreProperty = new SimpleStringProperty();
+        StringProperty CodigoProperty = new SimpleStringProperty();
+        tfNombre.textProperty().bindBidirectional(NombreProperty);
+        tfCodigo.textProperty().bindBidirectional(CodigoProperty);
+
+        btnCrearAceptar.disableProperty().bind(
+                Bindings.createBooleanBinding(
+                        () -> NombreProperty.get() == null || NombreProperty.get().trim().isEmpty() ||
+                                CodigoProperty.get() == null || CodigoProperty.get().trim().isEmpty(),
+                        NombreProperty, CodigoProperty
+                )
+        );
+    }
 
     @FXML
     public void Aceptar(ActionEvent actionEvent) throws SQLException {
