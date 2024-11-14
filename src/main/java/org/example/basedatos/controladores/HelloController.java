@@ -30,17 +30,9 @@ public class HelloController {
     @FXML
     private TableView tbDatos;
     @FXML
-    private TableColumn tcNombre;
-    @FXML
-    private TableColumn tcCodigo;
-    @FXML
     private TableColumn tcFechaCreacion;
     @FXML
     private TableColumn tcID;
-    @FXML
-    private TableColumn tcFechaEscritura;
-    @FXML
-    private ChoiceBox cbBusqueda;
     @FXML
     private TextField tfBusqueda;
     @FXML
@@ -49,27 +41,29 @@ public class HelloController {
     private Button btnCrear;
     @FXML
     private Button btnModificar;
+    @FXML
+    private TableColumn tcNum_Productos;
+    @FXML
+    private TableColumn tcCliente;
+    @FXML
+    private TableColumn tcFechaModificacion;
+    @FXML
+    private TableColumn tcPagado;
 
     public void initialize() throws SQLException {
 
-        cbBusqueda.getItems().addAll( "", "ID", "Nombre", "Codigo");
-        cbBusqueda.setOnAction(this::busquedacb);
-        cbBusqueda.setValue("");
+
 
         tcID.setCellValueFactory(new PropertyValueFactory<>("id"));
-        tcNombre.setCellValueFactory(new PropertyValueFactory<>("name"));
-        tcCodigo.setCellValueFactory(new PropertyValueFactory<>("code"));
+        tcCliente.setCellValueFactory(new PropertyValueFactory<>("cliente"));
+        tcNum_Productos.setCellValueFactory(new PropertyValueFactory<>("num_productos"));
+        tcPagado.setCellValueFactory(new PropertyValueFactory<>("pagado"));
         tcFechaCreacion.setCellValueFactory(new PropertyValueFactory<>("create_date"));
-        tcFechaEscritura.setCellValueFactory(new PropertyValueFactory<>("write_date"));
+        tcFechaModificacion.setCellValueFactory(new PropertyValueFactory<>("write_date"));
+
 
         btnEliminar.disableProperty().bind(tbDatos.getSelectionModel().selectedItemProperty().isNull());
         btnModificar.disableProperty().bind(tbDatos.getSelectionModel().selectedItemProperty().isNull());
-    }
-
-    private void busquedacb(Event event) {
-        String busquedacb = (String) cbBusqueda.getValue();
-        System.out.println(busquedacb);
-
     }
 
     @FXML
@@ -125,7 +119,7 @@ public class HelloController {
         stage.setScene(scene);
 
         ModificarController controller = fxmlLoader.getController();
-        controller.RecibirDatos(tupla.getId(), tupla.getName(), tupla.getCode());
+        //controller.RecibirDatos(tupla.getId(), tupla.getName(), tupla.getCode());
 
         stage.showAndWait();
 
@@ -147,7 +141,7 @@ public class HelloController {
             stage.setScene(scene);
 
             ModificarController controller = fxmlLoader.getController();
-            controller.RecibirDatos(tupla.getId(), tupla.getName(), tupla.getCode());
+            controller.RecibirDatos(tupla.getId(), tupla.getCliente(), tupla.getNum_productos());
 
             stage.showAndWait();
 
@@ -156,13 +150,13 @@ public class HelloController {
     }
 
     public void busqueda() throws SQLException {
-        if (cbBusqueda.getValue().equals(""))
+        if (tfBusqueda.getText().equals(""))
         {
             Task<Void> tarea = new Task<Void>() {
                 @Override
                 protected Void call() throws Exception {
                     try{
-                        List<payment> payments = PaymentDAO.obtenerBancos();
+                        List<payment> payments = PaymentDAO.obtenerFacturas();
                         ObservableList<payment> datos = FXCollections.observableArrayList(payments);
 
                         Platform.runLater(() -> {
@@ -181,79 +175,36 @@ public class HelloController {
                     return null;
                 }
             };
-
             Thread hilo = new Thread(tarea);
             hilo.start();
-
-        } else if (cbBusqueda.getValue().equals("ID")) {
-
-            List<payment> MetodosPagos = new ArrayList<>();
-
-            Connection conexion = ConexionDB.getConnection();
-            PreparedStatement IDBuscar = conexion.prepareStatement("SELECT * FROM payment_method WHERE id = ?");
-            IDBuscar.setInt(1, Integer.valueOf(tfBusqueda.getText()));
-            ResultSet resultado = IDBuscar.executeQuery();
-
-            while (resultado.next()) {
-                payment MetodoPago = new payment();
-                MetodoPago.setId(Integer.valueOf(resultado.getString("id")));
-                MetodoPago.setName(resultado.getString("name"));
-                MetodoPago.setCode(resultado.getString("code"));
-                MetodoPago.setCreate_date(Timestamp.valueOf(resultado.getString("create_date")));
-                MetodoPago.setWrite_date(Timestamp.valueOf(resultado.getString("write_date")));
-                MetodosPagos.add(MetodoPago);
-                System.out.println(resultado.getString("code"));
-
-            }
-            ObservableList<payment> datos = FXCollections.observableArrayList(MetodosPagos);
-            tbDatos.setItems(datos);
-
-        }else if (cbBusqueda.getValue().equals("Nombre")) {
-
-            List<payment> MetodosPagos = new ArrayList<>();
+        }else
+        {
+            List<payment> Facturas = new ArrayList<>();
 
             Connection conexion = ConexionDB.getConnection();
-            PreparedStatement NombreBuscar = conexion.prepareStatement("SELECT * FROM payment_method WHERE name LIKE ?");
+            PreparedStatement NombreBuscar = conexion.prepareStatement("SELECT * FROM aafacturas_alejandro WHERE cliente LIKE ?");
             NombreBuscar.setString(1,"%" + tfBusqueda.getText() + "%");
             ResultSet resultado = NombreBuscar.executeQuery();
 
             while (resultado.next()) {
-                payment MetodoPago = new payment();
-                MetodoPago.setId(Integer.valueOf(resultado.getString("id")));
-                MetodoPago.setName(resultado.getString("name"));
-                MetodoPago.setCode(resultado.getString("code"));
-                MetodoPago.setCreate_date(Timestamp.valueOf(resultado.getString("create_date")));
-                MetodoPago.setWrite_date(Timestamp.valueOf(resultado.getString("write_date")));
-                MetodosPagos.add(MetodoPago);
-                System.out.println(resultado.getString("code"));
+                payment factura = new payment();
+                factura.setId(Integer.valueOf(resultado.getString("id")));
+                factura.setCliente(resultado.getString("cliente"));
+                factura.setNum_productos(Integer.valueOf(resultado.getString("num_productos")));
+                factura.setCreate_date(Timestamp.valueOf(resultado.getString("fecha_creacion")));
+                factura.setWrite_date(Timestamp.valueOf(resultado.getString("fecha_modificación")));
+                Facturas.add(factura);
+
 
             }
-            ObservableList<payment> datos = FXCollections.observableArrayList(MetodosPagos);
-            tbDatos.setItems(datos);
-
-        }else if (cbBusqueda.getValue().equals("Codigo")) {
-
-            List<payment> MetodosPagos = new ArrayList<>();
-
-            Connection conexion = ConexionDB.getConnection();
-            PreparedStatement CodigoBuscar = conexion.prepareStatement("SELECT * FROM payment_method WHERE code LIKE ?");
-            CodigoBuscar.setString(1,"%" + tfBusqueda.getText() + "%");
-            ResultSet resultado = CodigoBuscar.executeQuery();
-
-            while (resultado.next()) {
-                payment MetodoPago = new payment();
-                MetodoPago.setId(Integer.valueOf(resultado.getString("id")));
-                MetodoPago.setName(resultado.getString("name"));
-                MetodoPago.setCode(resultado.getString("code"));
-                MetodoPago.setCreate_date(Timestamp.valueOf(resultado.getString("create_date")));
-                MetodoPago.setWrite_date(Timestamp.valueOf(resultado.getString("write_date")));
-                MetodosPagos.add(MetodoPago);
-                System.out.println(resultado.getString("code"));
-
-            }
-            ObservableList<payment> datos = FXCollections.observableArrayList(MetodosPagos);
+            ObservableList<payment> datos = FXCollections.observableArrayList(Facturas);
             tbDatos.setItems(datos);
         }
+
+
+
+
+
     }
 
 }

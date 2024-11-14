@@ -5,14 +5,12 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.example.basedatos.DAO.ConexionDB;
-import org.example.basedatos.HelloApplication;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -71,10 +69,10 @@ public class ModificarController {
 
     }
 
-    public void RecibirDatos(int id, String name, String code){
+    public void RecibirDatos(int id, String cliente, int num_productos){
         tfID.setText(Integer.toString(id));
-        tfNombre.setText(name);
-        tfCodigo.setText(code);
+        tfNombre.setText(cliente);
+        tfCodigo.setText(String.valueOf(num_productos));
     }
 
     @FXML
