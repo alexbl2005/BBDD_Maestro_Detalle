@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.example.basedatos.DAO.ConexionDB;
@@ -22,23 +23,20 @@ public class ModificarController {
     @FXML
     private Button btnCrearAceptar;
     @FXML
-    private TextField tfNombre;
-    @FXML
-    private TextField tfCodigo;
-    @FXML
     private TextField tfID;
+    @FXML
+    private CheckBox cbPagado;
+    @FXML
+    private TextField tfCliente;
 
     public void initialize(){
         StringProperty NombreProperty = new SimpleStringProperty();
-        StringProperty CodigoProperty = new SimpleStringProperty();
-        tfNombre.textProperty().bindBidirectional(NombreProperty);
-        tfCodigo.textProperty().bindBidirectional(CodigoProperty);
+        tfCliente.textProperty().bindBidirectional(NombreProperty);
 
         btnCrearAceptar.disableProperty().bind(
                 Bindings.createBooleanBinding(
-                        () -> NombreProperty.get() == null || NombreProperty.get().trim().isEmpty() ||
-                                CodigoProperty.get() == null || CodigoProperty.get().trim().isEmpty(),
-                        NombreProperty, CodigoProperty
+                        () -> NombreProperty.get() == null || NombreProperty.get().trim().isEmpty(),
+                        NombreProperty
                 )
         );
     }
@@ -46,33 +44,26 @@ public class ModificarController {
     @FXML
     public void Aceptar(ActionEvent actionEvent) throws SQLException {
 
-        String Nombre = tfNombre.getText();
-        String Codigo = tfCodigo.getText();
+        String Nombre = tfCliente.getText();
+        Boolean Pagado = cbPagado.isSelected();
         int ID = Integer.parseInt(tfID.getText());
 
         Connection conexion = ConexionDB.getConnection();
-        PreparedStatement IDBuscar = conexion.prepareStatement("UPDATE payment_method SET name = ?, code = ?, write_date = NOW() WHERE id = ?");
+        PreparedStatement IDBuscar = conexion.prepareStatement("UPDATE aafacturas_alejandro SET cliente = ?, pagado = ?, fecha_modificación = NOW() WHERE id = ?");
         IDBuscar.setString(1, Nombre);
-        IDBuscar.setString(2, Codigo);
+        IDBuscar.setBoolean(2, Pagado);
         IDBuscar.setInt(3, ID);
         IDBuscar.executeUpdate();
-
-        Alert Creado = new Alert(Alert.AlertType.INFORMATION);
-        Creado.setTitle("Tarea completada con exito");
-        Creado.setContentText("Se ha modificado su registro");
 
         Node source = (Node) actionEvent.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
-
-        Creado.showAndWait();
-
     }
 
-    public void RecibirDatos(int id, String cliente, int num_productos){
+    public void RecibirDatos(int id, String cliente, boolean pagado){
         tfID.setText(Integer.toString(id));
-        tfNombre.setText(cliente);
-        tfCodigo.setText(String.valueOf(num_productos));
+        tfCliente.setText(cliente);
+        cbPagado.setSelected(pagado);
     }
 
     @FXML

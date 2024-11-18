@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.checkerframework.checker.units.qual.N;
 import org.example.basedatos.DAO.ConexionDB;
 
 import java.sql.Connection;
@@ -23,22 +24,24 @@ public class CrearController {
     @FXML
     private Button btnCrearAceptar;
     @FXML
-    private TextField tfNombre;
+    private CheckBox cbPagado;
     @FXML
-    private TextField tfCodigo;
+    private TextField tfCliente;
+    @FXML
+    private TextField tfNProductos;
 
 
     public void initialize(){
-        StringProperty NombreProperty = new SimpleStringProperty();
-        StringProperty CodigoProperty = new SimpleStringProperty();
-        tfNombre.textProperty().bindBidirectional(NombreProperty);
-        tfCodigo.textProperty().bindBidirectional(CodigoProperty);
+        StringProperty ClienteProperty = new SimpleStringProperty();
+        StringProperty NProductosProperty = new SimpleStringProperty();
+        tfCliente.textProperty().bindBidirectional(ClienteProperty);
+        tfNProductos.textProperty().bindBidirectional(NProductosProperty);
 
         btnCrearAceptar.disableProperty().bind(
                 Bindings.createBooleanBinding(
-                        () -> NombreProperty.get() == null || NombreProperty.get().trim().isEmpty() ||
-                                CodigoProperty.get() == null || CodigoProperty.get().trim().isEmpty(),
-                        NombreProperty, CodigoProperty
+                        () -> ClienteProperty.get() == null || ClienteProperty.get().trim().isEmpty() ||
+                                NProductosProperty.get() == null || NProductosProperty.get().trim().isEmpty(),
+                        ClienteProperty, NProductosProperty
                 )
         );
     }
@@ -46,24 +49,20 @@ public class CrearController {
     @FXML
     public void Aceptar(ActionEvent actionEvent) throws SQLException {
 
-        String Nombre = tfNombre.getText();
-        String Codigo = tfCodigo.getText();
+        String Cliente = tfCliente.getText();
+        int NProductos = Integer.parseInt(tfNProductos.getText());
+        boolean pagado = cbPagado.isSelected();
 
         Connection conexion = ConexionDB.getConnection();
-        PreparedStatement IDBuscar = conexion.prepareStatement("INSERT INTO payment_method (name, code,  create_date, write_date) VALUES (?,?,NOW(),NOW())");
-        IDBuscar.setString(1, Nombre);
-        IDBuscar.setString(2, Codigo);
+        PreparedStatement IDBuscar = conexion.prepareStatement("INSERT INTO aafacturas_alejandro (cliente, fecha_creacion,  fecha_modificación, pagado, num_productos) VALUES (?,NOW(),NOW(),?,?)");
+        IDBuscar.setString(1, Cliente);
+        IDBuscar.setBoolean(2, pagado);
+        IDBuscar.setInt(3, NProductos);
         IDBuscar.executeUpdate();
-
-        Alert Creado = new Alert(Alert.AlertType.INFORMATION);
-        Creado.setTitle("Tarea completada con exito");
-        Creado.setContentText("Se ha creado su registro");
 
         Node source = (Node) actionEvent.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
-
-        Creado.showAndWait();
     }
 
     @FXML

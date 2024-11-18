@@ -5,7 +5,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,22 +14,23 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.example.basedatos.DAO.ConexionDB;
 import org.example.basedatos.DAO.PaymentDAO;
+import org.example.basedatos.DAO.ProductosDAO;
 import org.example.basedatos.HelloApplication;
 import org.example.basedatos.modelos.payment;
+import org.example.basedatos.modelos.productos;
+
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HelloController {
+public class DetalleController {
 
 
     @FXML
     private Button BtnBuscar;
     @FXML
     private TableView tbDatos;
-    @FXML
-    private TableColumn tcFechaCreacion;
     @FXML
     private TableColumn tcID;
     @FXML
@@ -42,28 +42,41 @@ public class HelloController {
     @FXML
     private Button btnModificar;
     @FXML
-    private TableColumn tcNum_Productos;
+    private TableColumn tcID_Factura;
     @FXML
-    private TableColumn tcCliente;
+    private TableColumn tcNombre;
     @FXML
-    private TableColumn tcFechaModificacion;
+    private TableColumn tcCantidad;
     @FXML
-    private TableColumn tcPagado;
+    private TableColumn tcPrecio_Total;
+    @FXML
+    private TableColumn tcEstado;
+    @FXML
+    private TableColumn tcPrecio_Unitario;
+
+    int id_factura;
 
     public void initialize() throws SQLException {
 
 
 
         tcID.setCellValueFactory(new PropertyValueFactory<>("id"));
-        tcCliente.setCellValueFactory(new PropertyValueFactory<>("cliente"));
-        tcNum_Productos.setCellValueFactory(new PropertyValueFactory<>("num_productos"));
-        tcPagado.setCellValueFactory(new PropertyValueFactory<>("pagado"));
-        tcFechaCreacion.setCellValueFactory(new PropertyValueFactory<>("create_date"));
-        tcFechaModificacion.setCellValueFactory(new PropertyValueFactory<>("write_date"));
+        tcID_Factura.setCellValueFactory(new PropertyValueFactory<>("id_factura"));
+        tcNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        tcCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+        tcPrecio_Unitario.setCellValueFactory(new PropertyValueFactory<>("precio_unitario"));
+        tcPrecio_Total.setCellValueFactory(new PropertyValueFactory<>("precio_total"));
+        tcEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
 
 
         btnEliminar.disableProperty().bind(tbDatos.getSelectionModel().selectedItemProperty().isNull());
         btnModificar.disableProperty().bind(tbDatos.getSelectionModel().selectedItemProperty().isNull());
+
+        busqueda();
+    }
+
+    public void RecibirDatos(int id_factura){
+       this.id_factura = id_factura;
     }
 
     @FXML
@@ -133,15 +146,15 @@ public class HelloController {
         {
             payment tupla = (payment) tbDatos.getSelectionModel().getSelectedItem();
 
-            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaDetalle.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaModificar.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 350, 200);
             scene.getStylesheets().add(HelloApplication.class.getResource("Estiloo.css").toExternalForm());
             Stage stage = new Stage();
-            stage.setTitle("Productos de la Factura");
+            stage.setTitle("Modificar");
             stage.setScene(scene);
 
-            DetalleController controller = fxmlLoader.getController();
-            controller.RecibirDatos(tupla.getId());
+            ModificarController controller = fxmlLoader.getController();
+            controller.RecibirDatos(tupla.getId(), tupla.getCliente(), tupla.isPagado());
 
             stage.showAndWait();
 
@@ -156,8 +169,8 @@ public class HelloController {
                 @Override
                 protected Void call() throws Exception {
                     try{
-                        List<payment> payments = PaymentDAO.obtenerFacturas();
-                        ObservableList<payment> datos = FXCollections.observableArrayList(payments);
+                        List<productos> Productos = ProductosDAO.obtenerProductos(id_factura);
+                        ObservableList<productos> datos = FXCollections.observableArrayList(Productos);
 
                         Platform.runLater(() -> {
                             // Actualizar la interfaz gráfica con los valores de nombre y apellido
