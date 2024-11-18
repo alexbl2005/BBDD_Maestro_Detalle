@@ -1,6 +1,3 @@
-
-La base de datos que uso necesita de tener el modulo del punto de venta, sino no aparecera la base de datos
-
 Al pulsar al boton de buscar sin nada puesto en el desplegable te mostrara todos los datos en la tabla
 el desplegable sirve para elegir el campo en el que buscar
 
