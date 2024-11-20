@@ -15,6 +15,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.example.basedatos.DAO.ConexionDB;
 import org.example.basedatos.DAO.PaymentDAO;
+import org.example.basedatos.DAO.ProductosDAO;
 import org.example.basedatos.HelloApplication;
 import org.example.basedatos.modelos.payment;
 import java.io.IOException;
@@ -143,9 +144,9 @@ public class HelloController {
             DetalleController controller = fxmlLoader.getController();
             controller.RecibirDatos(tupla.getId());
 
-            stage.showAndWait();
+            stage.show();
 
-            busqueda();
+            controller.busqueda();
         }
     }
 

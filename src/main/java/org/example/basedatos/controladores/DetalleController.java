@@ -19,6 +19,7 @@ import org.example.basedatos.HelloApplication;
 import org.example.basedatos.modelos.payment;
 import org.example.basedatos.modelos.productos;
 
+import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -56,6 +57,10 @@ public class DetalleController {
 
     int id_factura;
 
+    public void RecibirDatos(int idfactura){
+        id_factura = idfactura;
+    }
+
     public void initialize() throws SQLException {
 
 
@@ -72,12 +77,9 @@ public class DetalleController {
         btnEliminar.disableProperty().bind(tbDatos.getSelectionModel().selectedItemProperty().isNull());
         btnModificar.disableProperty().bind(tbDatos.getSelectionModel().selectedItemProperty().isNull());
 
-        busqueda();
     }
 
-    public void RecibirDatos(int id_factura){
-       this.id_factura = id_factura;
-    }
+
 
     @FXML
     public void Buscar(ActionEvent actionEvent) throws SQLException {
@@ -169,7 +171,9 @@ public class DetalleController {
                 @Override
                 protected Void call() throws Exception {
                     try{
-                        List<productos> Productos = ProductosDAO.obtenerProductos(id_factura);
+                        ProductosDAO.RecogerDatos(id_factura);
+
+                        List<productos> Productos = ProductosDAO.obtenerProductos();
                         ObservableList<productos> datos = FXCollections.observableArrayList(Productos);
 
                         Platform.runLater(() -> {

@@ -8,12 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductosDAO {
-    public static List<productos> obtenerProductos(int idFactura) throws SQLException {
-        List<productos> Productos = new ArrayList<>();
 
+    static int id_factura;
+
+    public static void RecogerDatos(int idfactura){
+        id_factura = idfactura;
+    }
+
+    public static List<productos> obtenerProductos() throws SQLException {
+        List<productos> Productos = new ArrayList<>();
         try (Connection conexion = ConexionDB.getConnection();
              Statement statement = conexion.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT * FROM aaproductos_alejandro WHERE id_factura = " + idFactura + " ORDER BY nombre");) {
+             ResultSet resultSet = statement.executeQuery("SELECT * FROM aaproductos_alejandro WHERE id_factura = " + id_factura + " ORDER BY nombre");) {
 
             while (resultSet.next()) {
                 productos Producto = new productos();
