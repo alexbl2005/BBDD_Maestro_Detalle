@@ -1,21 +1,21 @@
 package org.example.basedatos.DAO;
 
-import org.example.basedatos.modelos.payment;
+import org.example.basedatos.modelos.factura;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PaymentDAO {
-    public static List<payment> obtenerFacturas() throws SQLException {
-        List<payment> Facturas = new ArrayList<>();
+    public static List<factura> obtenerFacturas() throws SQLException {
+        List<factura> Facturas = new ArrayList<>();
 
         try (Connection conexion = ConexionDB.getConnection();
              Statement statement = conexion.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT * FROM aafacturas_alejandro ORDER BY cliente ")) {
 
             while (resultSet.next()) {
-                payment Factura = new payment();
+                factura Factura = new factura();
                 Factura.setId(Integer.valueOf(resultSet.getString("id")));
                 Factura.setCliente((resultSet.getString("cliente")));
                 Factura.setNum_productos(Integer.valueOf(resultSet.getString("num_productos")));

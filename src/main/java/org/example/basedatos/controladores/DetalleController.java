@@ -12,14 +12,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import org.checkerframework.checker.units.qual.N;
 import org.example.basedatos.DAO.ConexionDB;
-import org.example.basedatos.DAO.PaymentDAO;
 import org.example.basedatos.DAO.ProductosDAO;
 import org.example.basedatos.HelloApplication;
-import org.example.basedatos.modelos.payment;
 import org.example.basedatos.modelos.productos;
 
-import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -55,10 +53,15 @@ public class DetalleController {
     @FXML
     private TableColumn tcPrecio_Unitario;
 
+    static int N_Productos;
     int id_factura;
 
-    public void RecibirDatos(int idfactura){
+    public void RecibirDatos(int idfactura, int NProductos) {
         id_factura = idfactura;
+        N_Productos = NProductos;
+    }
+    public static void NumeroProductos(int NProductos) {
+        N_Productos = NProductos;
     }
 
     public void initialize() throws SQLException {
@@ -90,19 +93,22 @@ public class DetalleController {
 
     @FXML
     public void Eliminar(ActionEvent actionEvent) throws SQLException {
-        payment tupla = (payment) tbDatos.getSelectionModel().getSelectedItem();
+        productos tupla = (productos) tbDatos.getSelectionModel().getSelectedItem();
 
         int ID = tupla.getId();
 
         Connection conexion = ConexionDB.getConnection();
-        PreparedStatement IDEliminar = conexion.prepareStatement("DELETE FROM payment_method WHERE id = ?;");
+        PreparedStatement IDEliminar = conexion.prepareStatement("DELETE FROM aaproductos_alejandro WHERE id = ?;");
         IDEliminar.setInt(1, ID);
         IDEliminar.executeUpdate();
 
-        Alert Eliminado = new Alert(Alert.AlertType.INFORMATION);
-        Eliminado.setTitle("Registro eliminido");
-        Eliminado.setContentText("Se ha eliminado el registro");
-        Eliminado.showAndWait();
+        N_Productos--;
+
+        Connection conexion2 = ConexionDB.getConnection();
+        PreparedStatement IDActualizar = conexion.prepareStatement("UPDATE aafacturas_alejandro SET num_productos = ? WHERE id = ?");
+        IDActualizar.setInt(1, N_Productos);
+        IDActualizar.setInt(2, id_factura);
+        IDActualizar.executeUpdate();
 
         busqueda();
     }
@@ -110,12 +116,17 @@ public class DetalleController {
     @FXML
     public void Crear(ActionEvent actionEvent) throws IOException, SQLException {
 
-            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaCrear.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaCrearProductos.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 350, 200);
             scene.getStylesheets().add(HelloApplication.class.getResource("Estiloo.css").toExternalForm());
             Stage stage = new Stage();
-            stage.setTitle("Crear");
+            stage.setTitle("Crear Produto");
             stage.setScene(scene);
+
+            CrearProductosController controller = fxmlLoader.getController();
+
+            controller.RecibirDatos(id_factura, N_Productos);
+
             stage.showAndWait();
 
             busqueda();
@@ -124,17 +135,17 @@ public class DetalleController {
     @FXML
     public void Modificar(ActionEvent actionEvent) throws IOException, SQLException {
 
-        payment tupla = (payment) tbDatos.getSelectionModel().getSelectedItem();
+        productos tupla = (productos) tbDatos.getSelectionModel().getSelectedItem();
 
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaModificar.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 350, 200);
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaModificarProductos.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 350, 350);
         scene.getStylesheets().add(HelloApplication.class.getResource("Estiloo.css").toExternalForm());
         Stage stage = new Stage();
         stage.setTitle("Modificar");
         stage.setScene(scene);
 
-        ModificarController controller = fxmlLoader.getController();
-        controller.RecibirDatos(tupla.getId(), tupla.getCliente(), tupla.isPagado());
+        ModificarProductosController controller = fxmlLoader.getController();
+        controller.RecibirDatos(tupla.getId_factura(), tupla.getNombre(), tupla.getCantidad(), tupla.getPrecio_unitario(), tupla.getEstado(), tupla.getId());
 
         stage.showAndWait();
 
@@ -146,17 +157,17 @@ public class DetalleController {
     public void DatosClick(MouseEvent event) throws IOException, SQLException {
         if(event.getClickCount()==2)
         {
-            payment tupla = (payment) tbDatos.getSelectionModel().getSelectedItem();
+            productos tupla = (productos) tbDatos.getSelectionModel().getSelectedItem();
 
-            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaModificar.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 350, 200);
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaModificarProductos.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 350, 350);
             scene.getStylesheets().add(HelloApplication.class.getResource("Estiloo.css").toExternalForm());
             Stage stage = new Stage();
             stage.setTitle("Modificar");
             stage.setScene(scene);
 
-            ModificarController controller = fxmlLoader.getController();
-            controller.RecibirDatos(tupla.getId(), tupla.getCliente(), tupla.isPagado());
+            ModificarProductosController controller = fxmlLoader.getController();
+            controller.RecibirDatos(tupla.getId_factura(), tupla.getNombre(), tupla.getCantidad(), tupla.getPrecio_unitario(), tupla.getEstado(), tupla.getId());
 
             stage.showAndWait();
 
@@ -196,25 +207,26 @@ public class DetalleController {
             hilo.start();
         }else
         {
-            List<payment> Facturas = new ArrayList<>();
+            List<productos> Productos = new ArrayList<>();
 
             Connection conexion = ConexionDB.getConnection();
-            PreparedStatement NombreBuscar = conexion.prepareStatement("SELECT * FROM aafacturas_alejandro WHERE cliente LIKE ?");
+            PreparedStatement NombreBuscar = conexion.prepareStatement("SELECT * FROM aaproductos_alejandro WHERE nombre LIKE ?");
             NombreBuscar.setString(1,"%" + tfBusqueda.getText() + "%");
             ResultSet resultado = NombreBuscar.executeQuery();
 
             while (resultado.next()) {
-                payment factura = new payment();
-                factura.setId(Integer.valueOf(resultado.getString("id")));
-                factura.setCliente(resultado.getString("cliente"));
-                factura.setNum_productos(Integer.valueOf(resultado.getString("num_productos")));
-                factura.setCreate_date(Timestamp.valueOf(resultado.getString("fecha_creacion")));
-                factura.setWrite_date(Timestamp.valueOf(resultado.getString("fecha_modificación")));
-                Facturas.add(factura);
+                productos Producto = new productos();
+                Producto.setId(Integer.valueOf(resultado.getString("id")));
+                Producto.setNombre((resultado.getString("nombre")));
+                Producto.setCantidad(Integer.valueOf(resultado.getString("cantidad")));
+                Producto.setPrecio_unitario(Integer.valueOf(resultado.getString("precio_unitario")));
+                Producto.setPrecio_total(Integer.valueOf(resultado.getString("precio_total")));
+                Producto.setEstado((resultado.getString("estado")));
+                Producto.setId_factura(Integer.valueOf(resultado.getString("id_factura")));
 
-
+                Productos.add(Producto);
             }
-            ObservableList<payment> datos = FXCollections.observableArrayList(Facturas);
+            ObservableList<productos> datos = FXCollections.observableArrayList(Productos);
             tbDatos.setItems(datos);
         }
 

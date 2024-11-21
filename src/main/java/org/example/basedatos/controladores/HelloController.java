@@ -5,7 +5,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,9 +14,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.example.basedatos.DAO.ConexionDB;
 import org.example.basedatos.DAO.PaymentDAO;
-import org.example.basedatos.DAO.ProductosDAO;
 import org.example.basedatos.HelloApplication;
-import org.example.basedatos.modelos.payment;
+import org.example.basedatos.modelos.factura;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -76,19 +74,14 @@ public class HelloController {
 
     @FXML
     public void Eliminar(ActionEvent actionEvent) throws SQLException {
-        payment tupla = (payment) tbDatos.getSelectionModel().getSelectedItem();
+        factura tupla = (factura) tbDatos.getSelectionModel().getSelectedItem();
 
         int ID = tupla.getId();
 
         Connection conexion = ConexionDB.getConnection();
-        PreparedStatement IDEliminar = conexion.prepareStatement("DELETE FROM payment_method WHERE id = ?;");
+        PreparedStatement IDEliminar = conexion.prepareStatement("DELETE FROM aafacturas_alejandro WHERE id = ?;");
         IDEliminar.setInt(1, ID);
         IDEliminar.executeUpdate();
-
-        Alert Eliminado = new Alert(Alert.AlertType.INFORMATION);
-        Eliminado.setTitle("Registro eliminido");
-        Eliminado.setContentText("Se ha eliminado el registro");
-        Eliminado.showAndWait();
 
         busqueda();
     }
@@ -110,7 +103,7 @@ public class HelloController {
     @FXML
     public void Modificar(ActionEvent actionEvent) throws IOException, SQLException {
 
-        payment tupla = (payment) tbDatos.getSelectionModel().getSelectedItem();
+        factura tupla = (factura) tbDatos.getSelectionModel().getSelectedItem();
 
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaModificar.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 350, 200);
@@ -129,20 +122,20 @@ public class HelloController {
     }
 
     @FXML
-    public void DatosClick(MouseEvent event) throws IOException, SQLException {
+    public void DatosClick(MouseEvent event) throws IOException, SQLException, InterruptedException {
         if(event.getClickCount()==2)
         {
-            payment tupla = (payment) tbDatos.getSelectionModel().getSelectedItem();
+            factura tupla = (factura) tbDatos.getSelectionModel().getSelectedItem();
 
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaDetalle.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 350, 200);
+            Scene scene = new Scene(fxmlLoader.load(), 750, 300);
             scene.getStylesheets().add(HelloApplication.class.getResource("Estiloo.css").toExternalForm());
             Stage stage = new Stage();
             stage.setTitle("Productos de la Factura");
             stage.setScene(scene);
 
             DetalleController controller = fxmlLoader.getController();
-            controller.RecibirDatos(tupla.getId());
+            controller.RecibirDatos(tupla.getId(), tupla.getNum_productos());
 
             stage.show();
 
@@ -157,8 +150,8 @@ public class HelloController {
                 @Override
                 protected Void call() throws Exception {
                     try{
-                        List<payment> payments = PaymentDAO.obtenerFacturas();
-                        ObservableList<payment> datos = FXCollections.observableArrayList(payments);
+                        List<factura> facturas = PaymentDAO.obtenerFacturas();
+                        ObservableList<factura> datos = FXCollections.observableArrayList(facturas);
 
                         Platform.runLater(() -> {
                             // Actualizar la interfaz gráfica con los valores de nombre y apellido
@@ -180,7 +173,7 @@ public class HelloController {
             hilo.start();
         }else
         {
-            List<payment> Facturas = new ArrayList<>();
+            List<factura> Facturas = new ArrayList<>();
 
             Connection conexion = ConexionDB.getConnection();
             PreparedStatement NombreBuscar = conexion.prepareStatement("SELECT * FROM aafacturas_alejandro WHERE cliente LIKE ?");
@@ -188,7 +181,7 @@ public class HelloController {
             ResultSet resultado = NombreBuscar.executeQuery();
 
             while (resultado.next()) {
-                payment factura = new payment();
+                factura factura = new factura();
                 factura.setId(Integer.valueOf(resultado.getString("id")));
                 factura.setCliente(resultado.getString("cliente"));
                 factura.setNum_productos(Integer.valueOf(resultado.getString("num_productos")));
@@ -198,7 +191,7 @@ public class HelloController {
 
 
             }
-            ObservableList<payment> datos = FXCollections.observableArrayList(Facturas);
+            ObservableList<factura> datos = FXCollections.observableArrayList(Facturas);
             tbDatos.setItems(datos);
         }
 

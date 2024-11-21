@@ -3,6 +3,7 @@ module org.example.basedatos {
     requires javafx.fxml;
     requires java.sql;
     requires transitive org.checkerframework.checker.qual;
+    requires java.desktop;
 
 
     opens org.example.basedatos to javafx.fxml;

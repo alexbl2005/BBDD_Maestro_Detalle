@@ -27,6 +27,7 @@ public class CrearController {
     @FXML
     private TextField tfNProductos;
 
+    int NProductos;
 
     public void initialize(){
         StringProperty ClienteProperty = new SimpleStringProperty();
@@ -47,7 +48,7 @@ public class CrearController {
     public void Aceptar(ActionEvent actionEvent) throws SQLException {
 
         String Cliente = tfCliente.getText();
-        int NProductos = Integer.parseInt(tfNProductos.getText());
+        NProductos = Integer.parseInt(tfNProductos.getText());
         boolean pagado = cbPagado.isSelected();
 
         Connection conexion = ConexionDB.getConnection();
@@ -74,19 +75,23 @@ public class CrearController {
              ResultSet resultSet = statement.executeQuery("SELECT id FROM aafacturas_alejandro ORDER BY fecha_creacion DESC LIMIT 1");) {
 
             while (resultSet.next()) {
-                idCliente = resultSet.getInt("id");
-
+                int idCliente = resultSet.getInt("id");
+                IDs.add(idCliente);
                 System.out.println(idCliente);
             }
         }
-
-//        PreparedStatement CrearProductos = conexion.prepareStatement("INSERT INTO aaproductos_alejandro (nombre, cantidad,  precio_unitario, precio_total, estado, id_factura) VALUES (?,?,?,?,?,?)");
-//        CrearProductos.setString(1, "Nulo");
-//        CrearProductos.setInt(2, 0);
-//        CrearProductos.setInt(3, 0);
-//        CrearProductos.setInt(4, 0);
-//        CrearProductos.setString(5, "Nulo");
-//        CrearProductos.setInt(6, idCliente);
+        do {
+            Connection conexion = ConexionDB.getConnection();
+            PreparedStatement CrearProductos = conexion.prepareStatement("INSERT INTO aaproductos_alejandro (nombre, cantidad,  precio_unitario, precio_total, estado, id_factura) VALUES (?,?,?,?,?,?)");
+            CrearProductos.setString(1, "Nulo");
+            CrearProductos.setInt(2, 0);
+            CrearProductos.setInt(3, 0);
+            CrearProductos.setInt(4, 0);
+            CrearProductos.setString(5, "Nulo");
+            CrearProductos.setInt(6, IDs.getFirst());
+            CrearProductos.executeUpdate();
+            NProductos--;
+        }while (NProductos != 0);
 
     }
 

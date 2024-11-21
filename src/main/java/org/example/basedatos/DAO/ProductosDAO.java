@@ -1,6 +1,5 @@
 package org.example.basedatos.DAO;
 
-import org.example.basedatos.modelos.payment;
 import org.example.basedatos.modelos.productos;
 
 import java.sql.*;

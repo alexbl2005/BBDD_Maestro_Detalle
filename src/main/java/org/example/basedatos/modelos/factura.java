@@ -1,11 +1,8 @@
 package org.example.basedatos.modelos;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.StringProperty;
-
 import java.sql.Timestamp;
 
-public class payment {
+public class factura {
     private int id;
     private String cliente;
     private int num_productos;
