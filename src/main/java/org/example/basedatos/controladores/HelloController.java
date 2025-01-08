@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import org.example.basedatos.DAO.ConexionDB;
 import org.example.basedatos.DAO.PaymentDAO;
 import org.example.basedatos.HelloApplication;
-import org.example.basedatos.modelos.factura;
+import org.example.basedatos.modelos.Factura;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -74,7 +74,7 @@ public class HelloController {
 
     @FXML
     public void Eliminar(ActionEvent actionEvent) throws SQLException {
-        factura tupla = (factura) tbDatos.getSelectionModel().getSelectedItem();
+        Factura tupla = (Factura) tbDatos.getSelectionModel().getSelectedItem();
 
         int ID = tupla.getId();
 
@@ -103,7 +103,7 @@ public class HelloController {
     @FXML
     public void Modificar(ActionEvent actionEvent) throws IOException, SQLException {
 
-        factura tupla = (factura) tbDatos.getSelectionModel().getSelectedItem();
+        Factura tupla = (Factura) tbDatos.getSelectionModel().getSelectedItem();
 
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaModificar.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 350, 200);
@@ -125,7 +125,7 @@ public class HelloController {
     public void DatosClick(MouseEvent event) throws IOException, SQLException, InterruptedException {
         if(event.getClickCount()==2)
         {
-            factura tupla = (factura) tbDatos.getSelectionModel().getSelectedItem();
+            Factura tupla = (Factura) tbDatos.getSelectionModel().getSelectedItem();
 
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaDetalle.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 750, 300);
@@ -135,7 +135,7 @@ public class HelloController {
             stage.setScene(scene);
 
             DetalleController controller = fxmlLoader.getController();
-            controller.RecibirDatos(tupla.getId(), tupla.getNum_productos());
+            controller.RecibirDatos(tupla.getId(), tupla.getNumProductos());
 
             stage.show();
 
@@ -150,8 +150,8 @@ public class HelloController {
                 @Override
                 protected Void call() throws Exception {
                     try{
-                        List<factura> facturas = PaymentDAO.obtenerFacturas();
-                        ObservableList<factura> datos = FXCollections.observableArrayList(facturas);
+                        List<Factura> Facturas = PaymentDAO.obtenerFacturas();
+                        ObservableList<Factura> datos = FXCollections.observableArrayList(Facturas);
 
                         Platform.runLater(() -> {
                             // Actualizar la interfaz gráfica con los valores de nombre y apellido
@@ -173,7 +173,7 @@ public class HelloController {
             hilo.start();
         }else
         {
-            List<factura> Facturas = new ArrayList<>();
+            List<Factura> Facturas = new ArrayList<>();
 
             Connection conexion = ConexionDB.getConnection();
             PreparedStatement NombreBuscar = conexion.prepareStatement("SELECT * FROM aafacturas_alejandro WHERE cliente LIKE ?");
@@ -181,17 +181,17 @@ public class HelloController {
             ResultSet resultado = NombreBuscar.executeQuery();
 
             while (resultado.next()) {
-                factura factura = new factura();
+                Factura factura = new Factura();
                 factura.setId(Integer.valueOf(resultado.getString("id")));
                 factura.setCliente(resultado.getString("cliente"));
-                factura.setNum_productos(Integer.valueOf(resultado.getString("num_productos")));
-                factura.setCreate_date(Timestamp.valueOf(resultado.getString("fecha_creacion")));
-                factura.setWrite_date(Timestamp.valueOf(resultado.getString("fecha_modificación")));
+                factura.setNumProductos(Integer.valueOf(resultado.getString("num_productos")));
+                factura.setCreateDate(Timestamp.valueOf(resultado.getString("fecha_creacion")));
+                factura.setWriteDate(Timestamp.valueOf(resultado.getString("fecha_modificación")));
                 Facturas.add(factura);
 
 
             }
-            ObservableList<factura> datos = FXCollections.observableArrayList(Facturas);
+            ObservableList<Factura> datos = FXCollections.observableArrayList(Facturas);
             tbDatos.setItems(datos);
         }
 

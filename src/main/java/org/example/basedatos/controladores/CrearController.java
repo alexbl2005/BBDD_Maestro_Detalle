@@ -9,7 +9,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.example.basedatos.DAO.ConexionDB;
-import org.example.basedatos.modelos.productos;
 
 import java.sql.*;
 import java.util.ArrayList;

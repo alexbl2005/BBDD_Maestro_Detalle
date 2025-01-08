@@ -12,11 +12,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import org.checkerframework.checker.units.qual.N;
 import org.example.basedatos.DAO.ConexionDB;
 import org.example.basedatos.DAO.ProductosDAO;
 import org.example.basedatos.HelloApplication;
-import org.example.basedatos.modelos.productos;
+import org.example.basedatos.modelos.Productos;
 
 import java.io.IOException;
 import java.sql.*;
@@ -93,7 +92,7 @@ public class DetalleController {
 
     @FXML
     public void Eliminar(ActionEvent actionEvent) throws SQLException {
-        productos tupla = (productos) tbDatos.getSelectionModel().getSelectedItem();
+        Productos tupla = (Productos) tbDatos.getSelectionModel().getSelectedItem();
 
         int ID = tupla.getId();
 
@@ -135,7 +134,7 @@ public class DetalleController {
     @FXML
     public void Modificar(ActionEvent actionEvent) throws IOException, SQLException {
 
-        productos tupla = (productos) tbDatos.getSelectionModel().getSelectedItem();
+        Productos tupla = (Productos) tbDatos.getSelectionModel().getSelectedItem();
 
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaModificarProductos.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 350, 350);
@@ -145,7 +144,7 @@ public class DetalleController {
         stage.setScene(scene);
 
         ModificarProductosController controller = fxmlLoader.getController();
-        controller.RecibirDatos(tupla.getId_factura(), tupla.getNombre(), tupla.getCantidad(), tupla.getPrecio_unitario(), tupla.getEstado(), tupla.getId());
+        controller.RecibirDatos(tupla.getIdFactura(), tupla.getNombre(), tupla.getCantidad(), tupla.getPrecioUnitario(), tupla.getEstado(), tupla.getId());
 
         stage.showAndWait();
 
@@ -157,7 +156,7 @@ public class DetalleController {
     public void DatosClick(MouseEvent event) throws IOException, SQLException {
         if(event.getClickCount()==2)
         {
-            productos tupla = (productos) tbDatos.getSelectionModel().getSelectedItem();
+            Productos tupla = (Productos) tbDatos.getSelectionModel().getSelectedItem();
 
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("VentanaModificarProductos.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 350, 350);
@@ -167,7 +166,7 @@ public class DetalleController {
             stage.setScene(scene);
 
             ModificarProductosController controller = fxmlLoader.getController();
-            controller.RecibirDatos(tupla.getId_factura(), tupla.getNombre(), tupla.getCantidad(), tupla.getPrecio_unitario(), tupla.getEstado(), tupla.getId());
+            controller.RecibirDatos(tupla.getIdFactura(), tupla.getNombre(), tupla.getCantidad(), tupla.getPrecioUnitario(), tupla.getEstado(), tupla.getId());
 
             stage.showAndWait();
 
@@ -184,8 +183,8 @@ public class DetalleController {
                     try{
                         ProductosDAO.RecogerDatos(id_factura);
 
-                        List<productos> Productos = ProductosDAO.obtenerProductos();
-                        ObservableList<productos> datos = FXCollections.observableArrayList(Productos);
+                        List<Productos> Productos = ProductosDAO.obtenerProductos();
+                        ObservableList<org.example.basedatos.modelos.Productos> datos = FXCollections.observableArrayList(Productos);
 
                         Platform.runLater(() -> {
                             // Actualizar la interfaz gráfica con los valores de nombre y apellido
@@ -207,7 +206,7 @@ public class DetalleController {
             hilo.start();
         }else
         {
-            List<productos> Productos = new ArrayList<>();
+            List<Productos> Productos = new ArrayList<>();
 
             Connection conexion = ConexionDB.getConnection();
             PreparedStatement NombreBuscar = conexion.prepareStatement("SELECT * FROM aaproductos_alejandro WHERE nombre LIKE ?");
@@ -215,18 +214,18 @@ public class DetalleController {
             ResultSet resultado = NombreBuscar.executeQuery();
 
             while (resultado.next()) {
-                productos Producto = new productos();
+                org.example.basedatos.modelos.Productos Producto = new Productos();
                 Producto.setId(Integer.valueOf(resultado.getString("id")));
                 Producto.setNombre((resultado.getString("nombre")));
                 Producto.setCantidad(Integer.valueOf(resultado.getString("cantidad")));
-                Producto.setPrecio_unitario(Integer.valueOf(resultado.getString("precio_unitario")));
-                Producto.setPrecio_total(Integer.valueOf(resultado.getString("precio_total")));
+                Producto.setPrecioUnitario(Integer.valueOf(resultado.getString("precio_unitario")));
+                Producto.setPrecioTotal(Integer.valueOf(resultado.getString("precio_total")));
                 Producto.setEstado((resultado.getString("estado")));
-                Producto.setId_factura(Integer.valueOf(resultado.getString("id_factura")));
+                Producto.setIdFactura(Integer.valueOf(resultado.getString("id_factura")));
 
                 Productos.add(Producto);
             }
-            ObservableList<productos> datos = FXCollections.observableArrayList(Productos);
+            ObservableList<org.example.basedatos.modelos.Productos> datos = FXCollections.observableArrayList(Productos);
             tbDatos.setItems(datos);
         }
 
