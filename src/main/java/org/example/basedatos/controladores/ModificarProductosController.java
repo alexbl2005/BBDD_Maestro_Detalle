@@ -7,11 +7,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.example.basedatos.DAO.ConexionDB;
+import org.example.basedatos.DAO.Conexiondb;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -62,7 +61,7 @@ public class ModificarProductosController {
         int id_factura = Integer.parseInt(tfIDFactura.getText());
         int id = Integer.parseInt(tfIDProducto.getText());
 
-        Connection conexion = ConexionDB.getConnection();
+        Connection conexion = Conexiondb.getConnection();
         PreparedStatement IDBuscar = conexion.prepareStatement("UPDATE aaproductos_alejandro SET nombre = ?, cantidad = ?, precio_unitario = ?,precio_total = ?,estado = ?, id_factura = ? WHERE id = ?");
         IDBuscar.setString(1, Nombre);
         IDBuscar.setInt(2, Cantidad);

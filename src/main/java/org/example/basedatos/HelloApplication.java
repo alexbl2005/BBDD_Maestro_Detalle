@@ -6,12 +6,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
-public class HelloApplication extends Application
-{
+/**
+ * Clase de la apicación.
+ */
+public class HelloApplication extends Application {
   @Override
-  public void start(Stage stage) throws IOException
-  {
+  public void start(Stage stage) throws IOException {
     FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
     Scene scene = new Scene(fxmlLoader.load(), 800, 400);
     scene.getStylesheets().add(getClass().getResource("Estiloo.css").toExternalForm());
@@ -20,8 +20,10 @@ public class HelloApplication extends Application
     stage.show();
   }
 
-  public static void main(String[] args)
-  {
+  /**
+   * Clase main.
+   */
+  public static void main(String[] args) {
     launch();
   }
 }

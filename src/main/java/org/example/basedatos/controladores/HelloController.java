@@ -12,8 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import org.example.basedatos.DAO.ConexionDB;
-import org.example.basedatos.DAO.PaymentDAO;
+import org.example.basedatos.DAO.Conexiondb;
+import org.example.basedatos.DAO.Paymentdao;
 import org.example.basedatos.HelloApplication;
 import org.example.basedatos.modelos.Factura;
 import java.io.IOException;
@@ -78,7 +78,7 @@ public class HelloController {
 
         int ID = tupla.getId();
 
-        Connection conexion = ConexionDB.getConnection();
+        Connection conexion = Conexiondb.getConnection();
         PreparedStatement IDEliminar = conexion.prepareStatement("DELETE FROM aafacturas_alejandro WHERE id = ?;");
         IDEliminar.setInt(1, ID);
         IDEliminar.executeUpdate();
@@ -150,7 +150,7 @@ public class HelloController {
                 @Override
                 protected Void call() throws Exception {
                     try{
-                        List<Factura> Facturas = PaymentDAO.obtenerFacturas();
+                        List<Factura> Facturas = Paymentdao.obtenerFacturas();
                         ObservableList<Factura> datos = FXCollections.observableArrayList(Facturas);
 
                         Platform.runLater(() -> {
@@ -175,7 +175,7 @@ public class HelloController {
         {
             List<Factura> Facturas = new ArrayList<>();
 
-            Connection conexion = ConexionDB.getConnection();
+            Connection conexion = Conexiondb.getConnection();
             PreparedStatement NombreBuscar = conexion.prepareStatement("SELECT * FROM aafacturas_alejandro WHERE cliente LIKE ?");
             NombreBuscar.setString(1,"%" + tfBusqueda.getText() + "%");
             ResultSet resultado = NombreBuscar.executeQuery();

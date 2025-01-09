@@ -4,22 +4,15 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.example.basedatos.DAO.ConexionDB;
-import org.example.basedatos.HelloApplication;
+import org.example.basedatos.DAO.Conexiondb;
 
-import javax.imageio.IIOParam;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CrearProductosController {
     @FXML
@@ -67,7 +60,7 @@ public class CrearProductosController {
         int PrecioTotal = Cantidad * PrecioUnitario;
 
 
-        Connection conexion = ConexionDB.getConnection();
+        Connection conexion = Conexiondb.getConnection();
         PreparedStatement IDBuscar = conexion.prepareStatement("INSERT INTO aaproductos_alejandro (nombre, cantidad, precio_unitario, precio_total, estado, id_factura) VALUES (?,?,?,?,?,?)");
         IDBuscar.setString(1, Nombre);
         IDBuscar.setInt(2, Cantidad);
@@ -79,7 +72,7 @@ public class CrearProductosController {
 
         N_Productos++;
 
-        Connection conexion2 = ConexionDB.getConnection();
+        Connection conexion2 = Conexiondb.getConnection();
         PreparedStatement IDActualizar = conexion.prepareStatement("UPDATE aafacturas_alejandro SET num_productos = ? WHERE id = ?");
         IDActualizar.setInt(1, N_Productos);
         IDActualizar.setInt(2, id_factura);

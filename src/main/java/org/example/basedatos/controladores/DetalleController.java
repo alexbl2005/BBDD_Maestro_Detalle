@@ -12,8 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import org.example.basedatos.DAO.ConexionDB;
-import org.example.basedatos.DAO.ProductosDAO;
+import org.example.basedatos.DAO.Conexiondb;
+import org.example.basedatos.DAO.Productosdao;
 import org.example.basedatos.HelloApplication;
 import org.example.basedatos.modelos.Productos;
 
@@ -96,14 +96,14 @@ public class DetalleController {
 
         int ID = tupla.getId();
 
-        Connection conexion = ConexionDB.getConnection();
+        Connection conexion = Conexiondb.getConnection();
         PreparedStatement IDEliminar = conexion.prepareStatement("DELETE FROM aaproductos_alejandro WHERE id = ?;");
         IDEliminar.setInt(1, ID);
         IDEliminar.executeUpdate();
 
         N_Productos--;
 
-        Connection conexion2 = ConexionDB.getConnection();
+        Connection conexion2 = Conexiondb.getConnection();
         PreparedStatement IDActualizar = conexion.prepareStatement("UPDATE aafacturas_alejandro SET num_productos = ? WHERE id = ?");
         IDActualizar.setInt(1, N_Productos);
         IDActualizar.setInt(2, id_factura);
@@ -181,9 +181,9 @@ public class DetalleController {
                 @Override
                 protected Void call() throws Exception {
                     try{
-                        ProductosDAO.RecogerDatos(id_factura);
+                        Productosdao.recogerDatos(id_factura);
 
-                        List<Productos> Productos = ProductosDAO.obtenerProductos();
+                        List<Productos> Productos = Productosdao.obtenerProductos();
                         ObservableList<org.example.basedatos.modelos.Productos> datos = FXCollections.observableArrayList(Productos);
 
                         Platform.runLater(() -> {
@@ -208,7 +208,7 @@ public class DetalleController {
         {
             List<Productos> Productos = new ArrayList<>();
 
-            Connection conexion = ConexionDB.getConnection();
+            Connection conexion = Conexiondb.getConnection();
             PreparedStatement NombreBuscar = conexion.prepareStatement("SELECT * FROM aaproductos_alejandro WHERE nombre LIKE ?");
             NombreBuscar.setString(1,"%" + tfBusqueda.getText() + "%");
             ResultSet resultado = NombreBuscar.executeQuery();

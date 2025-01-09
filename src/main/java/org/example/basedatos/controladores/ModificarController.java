@@ -6,12 +6,11 @@ import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.example.basedatos.DAO.ConexionDB;
+import org.example.basedatos.DAO.Conexiondb;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -48,7 +47,7 @@ public class ModificarController {
         Boolean Pagado = cbPagado.isSelected();
         int ID = Integer.parseInt(tfID.getText());
 
-        Connection conexion = ConexionDB.getConnection();
+        Connection conexion = Conexiondb.getConnection();
         PreparedStatement IDBuscar = conexion.prepareStatement("UPDATE aafacturas_alejandro SET cliente = ?, pagado = ?, fecha_modificación = NOW() WHERE id = ?");
         IDBuscar.setString(1, Nombre);
         IDBuscar.setBoolean(2, Pagado);

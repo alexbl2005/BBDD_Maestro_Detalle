@@ -8,7 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import org.example.basedatos.DAO.ConexionDB;
+import org.example.basedatos.DAO.Conexiondb;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class CrearController {
         NProductos = Integer.parseInt(tfNProductos.getText());
         boolean pagado = cbPagado.isSelected();
 
-        Connection conexion = ConexionDB.getConnection();
+        Connection conexion = Conexiondb.getConnection();
         PreparedStatement IDBuscar = conexion.prepareStatement("INSERT INTO aafacturas_alejandro (cliente, fecha_creacion,  fecha_modificación, pagado, num_productos) VALUES (?,NOW(),NOW(),?,?)");
         IDBuscar.setString(1, Cliente);
         IDBuscar.setBoolean(2, pagado);
@@ -69,7 +69,7 @@ public class CrearController {
 
         List<Integer> IDs = new ArrayList<>();
 
-        try (Connection conexion = ConexionDB.getConnection();
+        try (Connection conexion = Conexiondb.getConnection();
              Statement statement = conexion.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT id FROM aafacturas_alejandro ORDER BY fecha_creacion DESC LIMIT 1");) {
 
@@ -80,7 +80,7 @@ public class CrearController {
             }
         }
         do {
-            Connection conexion = ConexionDB.getConnection();
+            Connection conexion = Conexiondb.getConnection();
             PreparedStatement CrearProductos = conexion.prepareStatement("INSERT INTO aaproductos_alejandro (nombre, cantidad,  precio_unitario, precio_total, estado, id_factura) VALUES (?,?,?,?,?,?)");
             CrearProductos.setString(1, "Nulo");
             CrearProductos.setInt(2, 0);
