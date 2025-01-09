@@ -5,8 +5,7 @@ import java.sql.Timestamp;
 /**
  * Clase Factura.
  */
-public class factura
-{
+public class Factura {
   private int id;
   private String cliente;
   private int numProductos;

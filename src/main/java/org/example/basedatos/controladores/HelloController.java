@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 import org.example.basedatos.DAO.Conexiondb;
 import org.example.basedatos.DAO.Paymentdao;
 import org.example.basedatos.HelloApplication;
-import org.example.basedatos.modelos.factura;
+import org.example.basedatos.modelos.Factura;
 
 /**
  * Clase para controlar la ventana principal.
@@ -87,7 +87,7 @@ public class HelloController {
    */
   @FXML
   public void eliminar(ActionEvent actionEvent) throws SQLException {
-    factura tupla = (factura) tbDatos.getSelectionModel().getSelectedItem();
+    Factura tupla = (Factura) tbDatos.getSelectionModel().getSelectedItem();
 
     int id = tupla.getId();
 
@@ -131,7 +131,7 @@ public class HelloController {
     stage.setTitle("Modificar");
     stage.setScene(scene);
 
-    factura tupla = (factura) tbDatos.getSelectionModel().getSelectedItem();
+    Factura tupla = (Factura) tbDatos.getSelectionModel().getSelectedItem();
 
     ModificarController controller = fxmlLoader.getController();
     controller.recibirDatos(tupla.getId(), tupla.getCliente(), tupla.isPagado());
@@ -158,7 +158,7 @@ public class HelloController {
       stage.setTitle("Productos de la Factura");
       stage.setScene(scene);
 
-      factura tupla = (factura) tbDatos.getSelectionModel().getSelectedItem();
+      Factura tupla = (Factura) tbDatos.getSelectionModel().getSelectedItem();
 
       DetalleController controller = fxmlLoader.getController();
       controller.recibirDatos(tupla.getId(), tupla.getNumProductos());
@@ -178,8 +178,8 @@ public class HelloController {
         @Override
         protected Void call() throws Exception {
           try {
-            List<factura> facturas = Paymentdao.obtenerFacturas();
-            ObservableList<factura> datos = FXCollections.observableArrayList(facturas);
+            List<Factura> Facturas = Paymentdao.obtenerFacturas();
+            ObservableList<Factura> datos = FXCollections.observableArrayList(Facturas);
 
             Platform.runLater(() -> {
               // Actualizar la interfaz gráfica con los valores de nombre y apellido
@@ -200,7 +200,7 @@ public class HelloController {
       Thread hilo = new Thread(tarea);
       hilo.start();
     } else {
-      List<factura> facturas = new ArrayList<>();
+      List<Factura> Facturas = new ArrayList<>();
 
       Connection conexion = Conexiondb.getConnection();
       PreparedStatement nombreBuscar =
@@ -209,17 +209,17 @@ public class HelloController {
       ResultSet resultado = nombreBuscar.executeQuery();
 
       while (resultado.next()) {
-        factura factura = new factura();
+        Factura factura = new Factura();
         factura.setId(Integer.valueOf(resultado.getString("id")));
         factura.setCliente(resultado.getString("cliente"));
         factura.setNumProductos(Integer.valueOf(resultado.getString("num_productos")));
         factura.setCreateDate(Timestamp.valueOf(resultado.getString("fecha_creacion")));
         factura.setWriteDate(Timestamp.valueOf(resultado.getString("fecha_modificación")));
-        facturas.add(factura);
+        Facturas.add(factura);
 
 
       }
-      ObservableList<factura> datos = FXCollections.observableArrayList(facturas);
+      ObservableList<Factura> datos = FXCollections.observableArrayList(Facturas);
       tbDatos.setItems(datos);
     }
 
