@@ -1,5 +1,8 @@
 package org.example.basedatos.controladores;
 
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -10,95 +13,110 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.example.basedatos.DAO.Conexiondb;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * Clase que controla la interfaz grafica de cuando creas una nueva factura.
+ */
 public class CrearController {
-    @FXML
-    private Button btnCrearCancelar;
-    @FXML
-    private Button btnCrearAceptar;
-    @FXML
-    private CheckBox cbPagado;
-    @FXML
-    private TextField tfCliente;
-    @FXML
-    private TextField tfNProductos;
+  @FXML
+  private Button btnCrearCancelar;
+  @FXML
+  private Button btnCrearAceptar;
+  @FXML
+  private CheckBox cbPagado;
+  @FXML
+  private TextField tfCliente;
+  @FXML
+  private TextField tfnproductos;
 
-    int NProductos;
+  int nproductos;
 
-    public void initialize(){
-        StringProperty ClienteProperty = new SimpleStringProperty();
-        StringProperty NProductosProperty = new SimpleStringProperty();
-        tfCliente.textProperty().bindBidirectional(ClienteProperty);
-        tfNProductos.textProperty().bindBidirectional(NProductosProperty);
+  /**
+   * Funcion initialize de la clase.
+   */
+  public void initialize() {
+    StringProperty clienteProperty = new SimpleStringProperty();
+    StringProperty nproductosProperty = new SimpleStringProperty();
+    tfCliente.textProperty().bindBidirectional(clienteProperty);
+    tfnproductos.textProperty().bindBidirectional(nproductosProperty);
 
-        btnCrearAceptar.disableProperty().bind(
-                Bindings.createBooleanBinding(
-                        () -> ClienteProperty.get() == null || ClienteProperty.get().trim().isEmpty() ||
-                                NProductosProperty.get() == null || NProductosProperty.get().trim().isEmpty(),
-                        ClienteProperty, NProductosProperty
-                )
-        );
+    btnCrearAceptar.disableProperty().bind(
+        Bindings.createBooleanBinding(
+            () -> clienteProperty.get() == null || clienteProperty.get().trim().isEmpty()
+                || nproductosProperty.get() == null || nproductosProperty.get().trim().isEmpty(),
+            clienteProperty, nproductosProperty
+        )
+    );
+  }
+
+  /**
+   * Funcion que controla el boton Aceptar.
+   */
+  @FXML
+  public void aceptar(ActionEvent actionEvent) throws SQLException {
+
+    String cliente = tfCliente.getText();
+    nproductos = Integer.parseInt(tfnproductos.getText());
+    boolean pagado = cbPagado.isSelected();
+
+    Connection conexion = Conexiondb.getConnection();
+    PreparedStatement idbuscar = conexion.prepareStatement(
+        "INSERT INTO aafacturas_alejandro (cliente, fecha_creacion,  fecha_modificación, pagado,"
+            + " num_productos) VALUES (?,NOW(),NOW(),?,?)");
+    idbuscar.setString(1, cliente);
+    idbuscar.setBoolean(2, pagado);
+    idbuscar.setInt(3, nproductos);
+    idbuscar.executeUpdate();
+
+    crearProductos();
+
+    Node source = (Node) actionEvent.getSource();
+    Stage stage = (Stage) source.getScene().getWindow();
+    stage.close();
+  }
+
+  /**
+   * Funcion que crea los productos automaticamente.
+   */
+  public void crearProductos() throws SQLException {
+
+    List<Integer> ids = new ArrayList<>();
+
+    try (Connection conexion = Conexiondb.getConnection();
+         Statement statement = conexion.createStatement();
+         ResultSet resultSet = statement.executeQuery(
+             "SELECT id FROM aafacturas_alejandro ORDER BY fecha_creacion DESC LIMIT 1");) {
+
+      while (resultSet.next()) {
+        int idCliente = resultSet.getInt("id");
+        ids.add(idCliente);
+        System.out.println(idCliente);
+      }
     }
+    do {
+      Connection conexion = Conexiondb.getConnection();
+      PreparedStatement crearProductos = conexion.prepareStatement(
+          "INSERT INTO aaproductos_alejandro (nombre, cantidad,  precio_unitario, precio_total, "
+              + "estado, id_factura) VALUES (?,?,?,?,?,?)");
+      crearProductos.setString(1, "Nulo");
+      crearProductos.setInt(2, 0);
+      crearProductos.setInt(3, 0);
+      crearProductos.setInt(4, 0);
+      crearProductos.setString(5, "Nulo");
+      crearProductos.setInt(6, ids.getFirst());
+      crearProductos.executeUpdate();
+      nproductos--;
+    } while (nproductos != 0);
 
-    @FXML
-    public void Aceptar(ActionEvent actionEvent) throws SQLException {
+  }
 
-        String Cliente = tfCliente.getText();
-        NProductos = Integer.parseInt(tfNProductos.getText());
-        boolean pagado = cbPagado.isSelected();
+  /**
+   * Funcion que controla el boton Cancelar.
+   */
+  @FXML
+  public void cancelar(ActionEvent actionEvent) {
 
-        Connection conexion = Conexiondb.getConnection();
-        PreparedStatement IDBuscar = conexion.prepareStatement("INSERT INTO aafacturas_alejandro (cliente, fecha_creacion,  fecha_modificación, pagado, num_productos) VALUES (?,NOW(),NOW(),?,?)");
-        IDBuscar.setString(1, Cliente);
-        IDBuscar.setBoolean(2, pagado);
-        IDBuscar.setInt(3, NProductos);
-        IDBuscar.executeUpdate();
-
-        CrearProductos();
-
-        Node source = (Node) actionEvent.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
-        stage.close();
-    }
-
-
-    public void CrearProductos() throws SQLException {
-
-        List<Integer> IDs = new ArrayList<>();
-
-        try (Connection conexion = Conexiondb.getConnection();
-             Statement statement = conexion.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT id FROM aafacturas_alejandro ORDER BY fecha_creacion DESC LIMIT 1");) {
-
-            while (resultSet.next()) {
-                int idCliente = resultSet.getInt("id");
-                IDs.add(idCliente);
-                System.out.println(idCliente);
-            }
-        }
-        do {
-            Connection conexion = Conexiondb.getConnection();
-            PreparedStatement CrearProductos = conexion.prepareStatement("INSERT INTO aaproductos_alejandro (nombre, cantidad,  precio_unitario, precio_total, estado, id_factura) VALUES (?,?,?,?,?,?)");
-            CrearProductos.setString(1, "Nulo");
-            CrearProductos.setInt(2, 0);
-            CrearProductos.setInt(3, 0);
-            CrearProductos.setInt(4, 0);
-            CrearProductos.setString(5, "Nulo");
-            CrearProductos.setInt(6, IDs.getFirst());
-            CrearProductos.executeUpdate();
-            NProductos--;
-        }while (NProductos != 0);
-
-    }
-
-    @FXML
-    public void Cancelar(ActionEvent actionEvent) {
-
-        Node source = (Node) actionEvent.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
-        stage.close();
-    }
+    Node source = (Node) actionEvent.getSource();
+    Stage stage = (Stage) source.getScene().getWindow();
+    stage.close();
+  }
 }

@@ -3,7 +3,7 @@ package org.example.basedatos.DAO;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import org.example.basedatos.modelos.Factura;
+import org.example.basedatos.modelos.factura;
 
 /**
  * Clase que obtiene los metodos de pago.
@@ -13,8 +13,8 @@ public class Paymentdao {
   /**
    * Funcion que recoge todas las facturas de la base de datos.
    */
-  public static List<Factura> obtenerFacturas() throws SQLException {
-    List<Factura> facturas = new ArrayList<>();
+  public static List<factura> obtenerFacturas() throws SQLException {
+    List<factura> facturas = new ArrayList<>();
 
     try (Connection conexion = Conexiondb.getConnection();
          Statement statement = conexion.createStatement();
@@ -22,7 +22,7 @@ public class Paymentdao {
              "SELECT * FROM aafacturas_alejandro ORDER BY cliente ")) {
 
       while (resultSet.next()) {
-        Factura factura = new Factura();
+        factura factura = new factura();
         factura.setId(Integer.valueOf(resultSet.getString("id")));
         factura.setCliente((resultSet.getString("cliente")));
         factura.setNumProductos(Integer.valueOf(resultSet.getString("num_productos")));

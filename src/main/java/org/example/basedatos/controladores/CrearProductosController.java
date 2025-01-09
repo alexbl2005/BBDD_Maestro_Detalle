@@ -1,5 +1,6 @@
 package org.example.basedatos.controladores;
 
+import java.sql.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -12,85 +13,101 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.example.basedatos.DAO.Conexiondb;
 
-import java.sql.*;
-
+/**
+ * Clase que controla la interfaz grafica de cuando creas un nuevo producto.
+ */
 public class CrearProductosController {
-    @FXML
-    private Button btnCrearCancelar;
-    @FXML
-    private Button btnCrearAceptar;
-    @FXML
-    private ChoiceBox cbEstado;
-    @FXML
-    private TextField tfNombre;
-    @FXML
-    private TextField tfCantidad;
-    @FXML
-    private TextField tfPrecioUnitario;
+  @FXML
+  private Button btnCrearCancelar;
+  @FXML
+  private Button btnCrearAceptar;
+  @FXML
+  private ChoiceBox cbEstado;
+  @FXML
+  private TextField tfNombre;
+  @FXML
+  private TextField tfCantidad;
+  @FXML
+  private TextField tfPrecioUnitario;
 
-    int N_Productos;
-    int id_factura;
+  int nproductos;
+  int idFactura;
 
-    public void RecibirDatos(int idfactura, int NProductos){
-        id_factura = idfactura;
-        N_Productos = NProductos;
-    }
+  /**
+   * Funcion para coger datos de otra clase.
+   */
+  public void recibirDatos(int idfactura, int nproductos) {
+    idFactura = idfactura;
+    this.nproductos = nproductos;
+  }
 
-    public void initialize(){
+  /**
+   * Funcion initialize de la clase.
+   */
+  public void initialize() {
 
-        cbEstado.getItems().addAll( "No enviado", "Enviado", "Recibido", "Devuelto");
-        cbEstado.setValue("No enviado");
+    cbEstado.getItems().addAll("No enviado", "Enviado", "Recibido", "Devuelto");
+    cbEstado.setValue("No enviado");
 
-        StringProperty NombreProperty = new SimpleStringProperty();
-        tfNombre.textProperty().bindBidirectional(NombreProperty);
+    StringProperty nombreProperty = new SimpleStringProperty();
+    tfNombre.textProperty().bindBidirectional(nombreProperty);
 
-        btnCrearAceptar.disableProperty().bind(
-                Bindings.createBooleanBinding(
-                        () -> NombreProperty.get() == null || NombreProperty.get().trim().isEmpty(), NombreProperty
-                )
-        );
-    }
+    btnCrearAceptar.disableProperty().bind(
+        Bindings.createBooleanBinding(
+            () -> nombreProperty.get() == null || nombreProperty.get().trim().isEmpty(),
+            nombreProperty
+        )
+    );
+  }
 
-    @FXML
-    public void Aceptar(ActionEvent actionEvent) throws SQLException {
-        String Nombre = tfNombre.getText();
-        int Cantidad = Integer.valueOf(tfCantidad.getText());
-        int PrecioUnitario = Integer.valueOf(tfPrecioUnitario.getText());
-        String Estado = cbEstado.getValue().toString();
-        int PrecioTotal = Cantidad * PrecioUnitario;
-
-
-        Connection conexion = Conexiondb.getConnection();
-        PreparedStatement IDBuscar = conexion.prepareStatement("INSERT INTO aaproductos_alejandro (nombre, cantidad, precio_unitario, precio_total, estado, id_factura) VALUES (?,?,?,?,?,?)");
-        IDBuscar.setString(1, Nombre);
-        IDBuscar.setInt(2, Cantidad);
-        IDBuscar.setInt(3, PrecioUnitario);
-        IDBuscar.setInt(4, PrecioTotal);
-        IDBuscar.setString(5, Estado);
-        IDBuscar.setInt(6, id_factura);
-        IDBuscar.executeUpdate();
-
-        N_Productos++;
-
-        Connection conexion2 = Conexiondb.getConnection();
-        PreparedStatement IDActualizar = conexion.prepareStatement("UPDATE aafacturas_alejandro SET num_productos = ? WHERE id = ?");
-        IDActualizar.setInt(1, N_Productos);
-        IDActualizar.setInt(2, id_factura);
-        IDActualizar.executeUpdate();
-
-        DetalleController.NumeroProductos(N_Productos);
-
-        Node source = (Node) actionEvent.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
-        stage.close();
-    }
+  /**
+   * Funcion que controla el boton Crear.
+   */
+  @FXML
+  public void aceptar(ActionEvent actionEvent) throws SQLException {
+    String nombre = tfNombre.getText();
+    int cantidad = Integer.valueOf(tfCantidad.getText());
+    int precioUnitario = Integer.valueOf(tfPrecioUnitario.getText());
+    String estado = cbEstado.getValue().toString();
+    int precioTotal = cantidad * precioUnitario;
 
 
-    @FXML
-    public void Cancelar(ActionEvent actionEvent) {
+    Connection conexion = Conexiondb.getConnection();
+    PreparedStatement idbuscar = conexion.prepareStatement(
+        "INSERT INTO aaproductos_alejandro (nombre, cantidad, precio_unitario, precio_total, estado"
+            + ", id_factura) VALUES (?,?,?,?,?,?)");
+    idbuscar.setString(1, nombre);
+    idbuscar.setInt(2, cantidad);
+    idbuscar.setInt(3, precioUnitario);
+    idbuscar.setInt(4, precioTotal);
+    idbuscar.setString(5, estado);
+    idbuscar.setInt(6, idFactura);
+    idbuscar.executeUpdate();
 
-        Node source = (Node) actionEvent.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
-        stage.close();
-    }
+    nproductos++;
+
+    Connection conexion2 = Conexiondb.getConnection();
+    PreparedStatement idActualizar =
+        conexion.prepareStatement("UPDATE aafacturas_alejandro SET num_productos = ? WHERE id = ?");
+    idActualizar.setInt(1, nproductos);
+    idActualizar.setInt(2, idFactura);
+    idActualizar.executeUpdate();
+
+    DetalleController.numeroProductos(nproductos);
+
+    Node source = (Node) actionEvent.getSource();
+    Stage stage = (Stage) source.getScene().getWindow();
+    stage.close();
+  }
+
+  /**
+   * Funcion que controla el boton Cancelar.
+   */
+  @FXML
+  public void cancelar(ActionEvent actionEvent) {
+
+    Node source = (Node) actionEvent.getSource();
+    Stage stage = (Stage) source.getScene().getWindow();
+    stage.close();
+  }
 }

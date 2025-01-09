@@ -21,7 +21,7 @@
                         <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </TextField>
-                        <Button fx:id="BtnBuscar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#Buscar" prefHeight="33.0" prefWidth="80.0" styleClass="negro" text="Buscar">
+                        <Button fx:id="btnBuscar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#buscar" prefHeight="33.0" prefWidth="80.0" styleClass="negro" text="Buscar">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
@@ -33,7 +33,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button fx:id="btnCrear" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#Crear" styleClass="negro" text="Crear">
+                  <Button fx:id="btnCrear" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#crear" styleClass="negro" text="Crear">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
@@ -45,7 +45,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button fx:id="btnModificar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#Modificar" styleClass="negro" text="Modificar">
+                  <Button fx:id="btnModificar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#modificar" styleClass="negro" text="Modificar">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
@@ -57,7 +57,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button fx:id="btnEliminar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#Eliminar" styleClass="negro" text="Eliminar">
+                  <Button fx:id="btnEliminar" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#eliminar" styleClass="negro" text="Eliminar">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
@@ -73,14 +73,14 @@
             </HBox>
          </children>
       </HBox>
-            <TableView fx:id="tbDatos" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#DatosClick" prefHeight="342.0" prefWidth="706.0" styleClass="negro" VBox.vgrow="ALWAYS">
+            <TableView fx:id="tbDatos" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#datosClick" prefHeight="342.0" prefWidth="706.0" styleClass="negro" VBox.vgrow="ALWAYS">
                <columns>
-                  <TableColumn fx:id="tcID" prefWidth="42.0" styleClass="negro" text="ID" />
-            <TableColumn fx:id="tcID_Factura" prefWidth="75.0" styleClass="negro" text="ID factura" />
+                  <TableColumn fx:id="tcid" prefWidth="42.0" styleClass="negro" text="ID" />
+            <TableColumn fx:id="tcidFactura" prefWidth="75.0" styleClass="negro" text="ID factura" />
                   <TableColumn fx:id="tcNombre" prefWidth="110.0" styleClass="negro" text="Nombre" />
                   <TableColumn fx:id="tcCantidad" prefWidth="116.0" styleClass="negro" text="Cantidad" />
-            <TableColumn fx:id="tcPrecio_Unitario" prefWidth="104.0" styleClass="negro" text="Precio unitario" />
-                  <TableColumn fx:id="tcPrecio_Total" prefWidth="129.0" styleClass="negro" text="Precio Total" />
+            <TableColumn fx:id="tcprecioUnitario" prefWidth="104.0" styleClass="negro" text="Precio unitario" />
+                  <TableColumn fx:id="tcprecioTotal" prefWidth="129.0" styleClass="negro" text="Precio Total" />
                   <TableColumn fx:id="tcEstado" prefWidth="162.0" styleClass="negro" text="Estado de envio" />
                </columns>
             </TableView>
